@@ -1,4 +1,4 @@
-package org.wildstang.sample.subsystems.swerve;
+package org.wildstang.year2023.subsystems.swerve;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.kauailabs.navx.frc.AHRS;
@@ -8,11 +8,11 @@ import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.swerve.SwerveDriveTemplate;
-import org.wildstang.sample.robot.CANConstants;
-import org.wildstang.sample.robot.WSInputs;
-import org.wildstang.sample.robot.WSOutputs;
-import org.wildstang.sample.robot.WSSubsystems;
-import org.wildstang.sample.subsystems.targeting.AimHelper;
+import org.wildstang.year2023.robot.CANConstants;
+import org.wildstang.year2023.robot.WSInputs;
+import org.wildstang.year2023.robot.WSOutputs;
+import org.wildstang.year2023.robot.WSSubsystems;
+import org.wildstang.year2023.subsystems.targeting.AimHelper;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 
 import edu.wpi.first.wpilibj.SerialPort;

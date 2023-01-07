@@ -1,4 +1,4 @@
-package org.wildstang.sample.subsystems.swerve;
+package org.wildstang.year2023.subsystems.swerve;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
