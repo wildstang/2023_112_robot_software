@@ -19,10 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.wildstang.year2023.subsystems.swerve.DriveConstants;
 import org.wildstang.year2023.subsystems.swerve.WSSwerveHelper;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-
 public class AimHelper implements Subsystem {
     
     private WsRemoteAnalogInput ty; // y angle
