@@ -1,4 +1,4 @@
-package org.wildstang.sample.subsystems.targeting;
+package org.wildstang.year2023.subsystems.targeting;
 
 // ton of imports
 import org.wildstang.framework.subsystems.Subsystem;
@@ -9,15 +9,15 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.inputs.Input;
-import org.wildstang.sample.robot.WSInputs;
-import org.wildstang.sample.robot.WSOutputs;
+import org.wildstang.year2023.robot.WSInputs;
+import org.wildstang.year2023.robot.WSOutputs;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.wildstang.sample.subsystems.swerve.DriveConstants;
-import org.wildstang.sample.subsystems.swerve.WSSwerveHelper;
+import org.wildstang.year2023.subsystems.swerve.DriveConstants;
+import org.wildstang.year2023.subsystems.swerve.WSSwerveHelper;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;

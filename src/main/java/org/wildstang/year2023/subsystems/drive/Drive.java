@@ -1,4 +1,4 @@
-package org.wildstang.sample.subsystems.drive;
+package org.wildstang.year2023.subsystems.drive;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -9,8 +9,8 @@ import org.wildstang.framework.subsystems.drive.PathFollowingDrive;
 import org.wildstang.hardware.roborio.inputs.WsAnalogInput;
 import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
-import org.wildstang.sample.robot.WSInputs;
-import org.wildstang.sample.robot.WSOutputs;
+import org.wildstang.year2023.robot.WSInputs;
+import org.wildstang.year2023.robot.WSOutputs;
 
 import edu.wpi.first.wpilibj.I2C;
 
