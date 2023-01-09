@@ -2,6 +2,9 @@ package org.wildstang.year2023.subsystems.swerve;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,7 +17,7 @@ public class SwerveModule {
 
     private WsSparkMax driveMotor;
     private WsSparkMax angleMotor;
-    private CANCoder canCoder;
+    private AbsoluteEncoder absEncoder;
 
     /** Class: SwerveModule
      *  controls a single swerve pod, featuring two motors and one offboard sensor
@@ -23,10 +26,10 @@ public class SwerveModule {
      * @param canCoder canCoder offboard encoder
      * @param offset double value of cancoder when module is facing forward
      */
-    public SwerveModule(WsSparkMax driveMotor, WsSparkMax angleMotor, CANCoder canCoder, double offset) {
+    public SwerveModule(WsSparkMax driveMotor, WsSparkMax angleMotor, double offset) {
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
-        this.canCoder = canCoder;
+        this.absEncoder = angleMotor.getController().getAbsoluteEncoder(Type.kDutyCycle);
         this.driveMotor.setCoast();
         this.angleMotor.setBrake();
 
@@ -36,11 +39,6 @@ public class SwerveModule {
         //set up angle and drive with pid and kpid respectively
         driveMotor.initClosedLoop(DriveConstants.DRIVE_P, DriveConstants.DRIVE_I, DriveConstants.DRIVE_D, 0);
         angleMotor.initClosedLoop(DriveConstants.ANGLE_P, DriveConstants.ANGLE_I, DriveConstants.ANGLE_D, 0);
-        
-
-        CANCoderConfiguration canCoderConfiguration = new CANCoderConfiguration();
-        canCoderConfiguration.magnetOffsetDegrees = offset;
-        canCoder.configAllSettings(canCoderConfiguration);
 
     }
 
@@ -48,14 +46,14 @@ public class SwerveModule {
      * @return double for cancoder value (degrees)
     */
     public double getAngle() {
-        return 359.999 - canCoder.getAbsolutePosition();
+        return 359.999 - absEncoder.getPosition();
     }
 
     /** displays module information, needs the module name from super 
      * @param name the name of this module
     */
     public void displayNumbers(String name) {
-        SmartDashboard.putNumber(name + " CANCoder", 359.999 - canCoder.getAbsolutePosition());
+        SmartDashboard.putNumber(name + " CANCoder", getAngle());
         SmartDashboard.putNumber(name + " NEO angle encoder", angleMotor.getPosition());
         SmartDashboard.putNumber(name + " NEO angle target", target);
         SmartDashboard.putNumber(name + " NEO angle encoder target", encoderTarget);

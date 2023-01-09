@@ -208,13 +208,13 @@ public class SwerveDrive extends SwerveDriveTemplate {
         //create four swerve modules
         modules = new SwerveModule[]{
             new SwerveModule((WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.DRIVE1), 
-                (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ANGLE1), new CANCoder(CANConstants.ENC1), DriveConstants.FRONT_LEFT_OFFSET),
+                (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ANGLE1), DriveConstants.FRONT_LEFT_OFFSET),
             new SwerveModule((WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.DRIVE2), 
-                (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ANGLE2), new CANCoder(CANConstants.ENC2), DriveConstants.FRONT_RIGHT_OFFSET),
+                (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ANGLE2), DriveConstants.FRONT_RIGHT_OFFSET),
             new SwerveModule((WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.DRIVE3), 
-                (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ANGLE3), new CANCoder(CANConstants.ENC3), DriveConstants.REAR_LEFT_OFFSET),
+                (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ANGLE3), DriveConstants.REAR_LEFT_OFFSET),
             new SwerveModule((WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.DRIVE4), 
-                (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ANGLE4), new CANCoder(CANConstants.ENC4), DriveConstants.REAR_RIGHT_OFFSET)
+                (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ANGLE4), DriveConstants.REAR_RIGHT_OFFSET)
         };
         //create default swerveSignal
         swerveSignal = new SwerveSignal(new double[]{0.0, 0.0, 0.0, 0.0}, new double[]{0.0, 0.0, 0.0, 0.0});
