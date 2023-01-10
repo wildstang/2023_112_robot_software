@@ -1,6 +1,7 @@
 package org.wildstang.year2023.subsystems.swerve;
 
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
 import org.wildstang.framework.core.Core;
@@ -58,7 +59,8 @@ public class SwerveDrive extends SwerveDriveTemplate {
     private double autoTempX;
     private double autoTempY;
 
-    private final AHRS gyro = new AHRS(SerialPort.Port.kUSB);
+    //private final AHRS gyro = new AHRS(SerialPort.Port.kUSB);
+    private final Pigeon2 gyro = new Pigeon2(CANConstants.GYRO);
     public SwerveModule[] modules;
     private SwerveSignal swerveSignal;
     private WSSwerveHelper swerveHelper = new WSSwerveHelper();
@@ -96,8 +98,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
         }
         
         if (source == select && select.getValue()) {
-            gyro.reset();
-            gyro.setAngleAdjustment(0);
+            gyro.setYaw(0.0);
         }
         thrustValue = 1 - DriveConstants.DRIVE_THRUST + DriveConstants.DRIVE_THRUST * Math.abs(rightTrigger.getValue());
         xSpeed *= thrustValue;
@@ -169,8 +170,8 @@ public class SwerveDrive extends SwerveDriveTemplate {
         initInputs();
         initOutputs();
         resetState();
-        gyro.enableLogging(true);
-        gyro.reset();
+        //gyro.enableLogging(true);
+        gyro.setYaw(0.0);
     }
 
     public void initInputs() {
@@ -387,15 +388,14 @@ public class SwerveDrive extends SwerveDriveTemplate {
      * @param degrees the current value the gyro should read
      */
     public void setGyro(double degrees) {
-        gyro.reset();
         resetState();
         setToAuto();
-        gyro.setAngleAdjustment(degrees);
+        gyro.setYaw(degrees);
     }
 
     public double getGyroAngle() {
         if (!isFieldCentric) return 0;
-        limelight.setGyroValue((gyro.getAngle() + 360)%360);
-        return (gyro.getAngle()+360)%360;
+        limelight.setGyroValue((gyro.getYaw() + 360)%360);
+        return (gyro.getYaw()+360)%360;
     }    
 }
