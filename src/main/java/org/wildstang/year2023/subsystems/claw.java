@@ -1,15 +1,13 @@
 package org.wildstang.year2023.subsystems;
 
 import org.wildstang.framework.io.inputs.Input;
-import org.wildstang.framework.io.inputs.DigitalInput;
+import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
-import org.wildstang.hardware.roborio.outputs.WsPhoenix;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
 
-public class Claw implements Subsystem {
+public class claw implements Subsystem {
 
 AnalogInput joystick;
 WsSparkMax motor;
@@ -18,8 +16,7 @@ double motorSpeed;
 @Override
  public void init() {
 
-    joystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_Y);
-    joystick.addInputListener(this);
+    joystick = (AnalogInput) WSInputs.DRIVER_LEFT_JOYSTICK_Y.get();
     motor = (WsSparkMax) WSOutputs.TEST_MOTOR.get();
     motorSpeed = 0;
 
@@ -33,7 +30,7 @@ double motorSpeed;
 @Override
 public void update() {
 
-    motor.speed(motorSpeed);
+    motor.setValue(motorSpeed);
         
     }
 
