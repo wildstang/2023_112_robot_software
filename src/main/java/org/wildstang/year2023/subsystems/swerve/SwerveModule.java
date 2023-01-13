@@ -51,19 +51,19 @@ public class SwerveModule {
      * @return double for cancoder value (degrees)
     */
     public double getAngle() {
-        return 359.999 - absEncoder.getPosition()+chassisOffset;
+        return absEncoder.getPosition()+chassisOffset;
     }
 
     /** displays module information, needs the module name from super 
      * @param name the name of this module
     */
     public void displayNumbers(String name) {
-        SmartDashboard.putNumber(name + " CANCoder", getAngle());
-        SmartDashboard.putNumber(name + " NEO angle encoder", angleMotor.getPosition());
-        SmartDashboard.putNumber(name + " NEO angle target", target);
-        SmartDashboard.putNumber(name + " NEO angle encoder target", encoderTarget);
-        SmartDashboard.putNumber(name + " NEO drive power", drivePower);
-        SmartDashboard.putNumber(name + " NEO drive position", driveMotor.getPosition());
+        SmartDashboard.putNumber(name + " AA encoder+offsett", getAngle());
+        //SmartDashboard.putNumber(name + " NEO angle encoder", angleMotor.getPosition());
+        SmartDashboard.putNumber(name + " AA angle target", target);
+        //SmartDashboard.putNumber(name + " NEO angle encoder target", encoderTarget);
+        SmartDashboard.putNumber(name + " AA NEO drive power", drivePower);
+        //SmartDashboard.putNumber(name + " NEO drive position", driveMotor.getPosition());
     }
 
     /** resets drive encoder */

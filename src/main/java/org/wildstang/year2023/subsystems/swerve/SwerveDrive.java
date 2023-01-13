@@ -64,7 +64,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
     public SwerveModule[] modules;
     private SwerveSignal swerveSignal;
     private WSSwerveHelper swerveHelper = new WSSwerveHelper();
-    private AimHelper limelight;
+    //private AimHelper limelight;
 
     public enum driveType {TELEOP, AUTO, CROSS, LL};
     public driveType driveState;
@@ -219,7 +219,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
         };
         //create default swerveSignal
         swerveSignal = new SwerveSignal(new double[]{0.0, 0.0, 0.0, 0.0}, new double[]{0.0, 0.0, 0.0, 0.0});
-        limelight = (AimHelper) Core.getSubsystemManager().getSubsystem(WSSubsystems.AIM_HELPER);
+        //limelight = (AimHelper) Core.getSubsystemManager().getSubsystem(WSSubsystems.AIM_HELPER);
     }
     
     @Override
@@ -262,11 +262,11 @@ public class SwerveDrive extends SwerveDriveTemplate {
             this.swerveSignal = swerveHelper.setAuto(swerveHelper.getAutoPower(pathPos, pathVel, autoTravelled), pathHeading, rotSpeed, getGyroAngle());
             drive();        
         }
-        if (driveState == driveType.LL) {
-            rotSpeed = -limelight.getRotPID();
-            this.swerveSignal = swerveHelper.setDrive(xSpeed, ySpeed, rotSpeed, getGyroAngle());
-            drive();
-        }
+        // if (driveState == driveType.LL) {
+        //     //rotSpeed = -limelight.getRotPID();
+        //     this.swerveSignal = swerveHelper.setDrive(xSpeed, ySpeed, rotSpeed, getGyroAngle());
+        //     drive();
+        // }
         SmartDashboard.putNumber("Gyro Reading", getGyroAngle());
         SmartDashboard.putNumber("X speed", xSpeed);
         SmartDashboard.putNumber("Y speed", ySpeed);
@@ -395,7 +395,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
     public double getGyroAngle() {
         if (!isFieldCentric) return 0;
-        limelight.setGyroValue((gyro.getYaw() + 360)%360);
+        //limelight.setGyroValue((gyro.getYaw() + 360)%360);
         return (gyro.getYaw()+360)%360;
     }    
 }
