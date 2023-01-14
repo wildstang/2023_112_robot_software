@@ -396,6 +396,6 @@ public class SwerveDrive extends SwerveDriveTemplate {
     public double getGyroAngle() {
         if (!isFieldCentric) return 0;
         //limelight.setGyroValue((gyro.getYaw() + 360)%360);
-        return (gyro.getYaw()+360)%360;
+        return (359.99 - gyro.getYaw()+360)%360;
     }    
 }

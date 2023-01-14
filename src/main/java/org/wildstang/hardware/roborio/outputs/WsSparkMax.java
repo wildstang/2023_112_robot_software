@@ -245,6 +245,9 @@ public class WsSparkMax extends WsMotorController {
         controller.setD(D);
         controller.setFF(FF);
         controller.setFeedbackDevice(absEncoder);
+        controller.setPositionPIDWrappingEnabled(true);
+        controller.setPositionPIDWrappingMinInput(0.0);
+        controller.setPositionPIDWrappingMaxInput(360.0);
         isUsingController = true;
     }
 
