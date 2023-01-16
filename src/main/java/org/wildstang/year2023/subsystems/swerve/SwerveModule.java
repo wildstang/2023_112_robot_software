@@ -59,14 +59,12 @@ public class SwerveModule {
      * @param name the name of this module
     */
     public void displayNumbers(String name) {
-        SmartDashboard.putNumber(name + " AA true angle", getAngle());
-        SmartDashboard.putNumber(name + " AA raw angle", absEncoder.getPosition());
-        //SmartDashboard.putNumber(name + " NEO angle encoder", angleMotor.getPosition());
-        SmartDashboard.putNumber(name + " AA true target", target);
-        SmartDashboard.putNumber(name + " AA raw target", (359.99 - target + chassisOffset)%360);
-        //SmartDashboard.putNumber(name + " NEO angle encoder target", encoderTarget);
-        SmartDashboard.putNumber(name + " AA NEO drive power", drivePower);
-        //SmartDashboard.putNumber(name + " NEO drive position", driveMotor.getPosition());
+        SmartDashboard.putNumber(name + " true angle", getAngle());
+        SmartDashboard.putNumber(name + " raw angle", absEncoder.getPosition());
+        SmartDashboard.putNumber(name + " true target", target);
+        SmartDashboard.putNumber(name + " raw target", (359.99 - target + chassisOffset)%360);
+        SmartDashboard.putNumber(name + " NEO drive power", drivePower);
+        SmartDashboard.putNumber(name + " NEO drive position", driveMotor.getPosition());
     }
 
     /** resets drive encoder */
@@ -122,24 +120,7 @@ public class SwerveModule {
      * @param angle angle to run the module at, bearing degrees
     */
     private void runAtAngle(double angle) {
-        //double currentRotation = getAngle();
-        //
-        // if (currentRotation > 180 && angle + 180 < currentRotation) {
-        //     angleMotor.setPosition(angle+chassisOffset + 360);
-        // }
-        // else if (angle > 180 && currentRotation + 180 < angle) {
-        //     angleMotor.setPosition(angle + chassisOffset - 360);
-        // } else {
-        //     angleMotor.setPosition(angle+chassisOffset);
-        // }
         angleMotor.setPosition(((359.99 - angle)+chassisOffset)%360);
-        
-        // double deltaRotation = currentRotation - angle;
-        // double deltaTicks = deltaRotation / 360 * DriveConstants.TICKS_PER_REV * DriveConstants.ANGLE_RATIO;
-        // double currentTicks = angleMotor.getPosition();
-        // angleMotor.setPosition(currentTicks + deltaTicks);
-        // encoderTarget = currentTicks + deltaTicks;
-        
     }
 
     /**runs module drive at specified power [-1, 1] 
@@ -169,7 +150,6 @@ public class SwerveModule {
     */
     public boolean getDirection(double angle) {
         return Math.abs(angle - getAngle()) < 90 || Math.abs(angle - getAngle()) > 270;
-        //return true;
     } 
 
     public WsSparkMax getDriveMotor() {

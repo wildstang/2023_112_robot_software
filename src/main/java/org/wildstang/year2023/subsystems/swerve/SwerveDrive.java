@@ -115,27 +115,19 @@ public class SwerveDrive extends SwerveDriveTemplate {
             isSnake = false;
         }
         if (source == faceUp && faceUp.getValue()){
-            if (faceLeft.getValue()){ rotTarget = 291.0;
-            } else if (faceRight.getValue()){ rotTarget = 21.0;
-            } else  rotTarget = 0.0;
+            rotTarget = 0.0;
             rotLocked = true;
         }
         if (source == faceLeft && faceLeft.getValue()){
-            if (faceUp.getValue()){ rotTarget = 291.0;
-            } else if (faceDown.getValue()){ rotTarget = 201.0;
-            } else rotTarget = 270.0;
+            rotTarget = 270.0;
             rotLocked = true;
         }
         if (source == faceDown && faceDown.getValue()){
-            if (faceLeft.getValue()){ rotTarget = 201.0;
-            } else if (faceRight.getValue()){ rotTarget = 111.0;
-            } else rotTarget = 180.0;
+            rotTarget = 180.0;
             rotLocked = true;
         }
         if (source == faceRight && faceRight.getValue()){
-            if (faceUp.getValue()){ rotTarget = 21.0;
-            } else if (faceDown.getValue()){ rotTarget = 111.0;
-            } else rotTarget = 90.0;
+            rotTarget = 90.0;
             rotLocked = true;
         }
 
@@ -170,7 +162,6 @@ public class SwerveDrive extends SwerveDriveTemplate {
         initInputs();
         initOutputs();
         resetState();
-        //gyro.enableLogging(true);
         gyro.setYaw(0.0);
     }
 
@@ -258,7 +249,6 @@ public class SwerveDrive extends SwerveDriveTemplate {
             //ensure rotation is never more than 0.2 to prevent normalization of translation from occuring
             
             //update where the robot is, to determine error in path
-            updateAutoDistance();
             this.swerveSignal = swerveHelper.setAuto(swerveHelper.getAutoPower(pathPos, pathVel, autoTravelled), pathHeading, rotSpeed, getGyroAngle());
             drive();        
         }
@@ -363,23 +353,6 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
     public void setAiming() {
         driveState = driveType.LL;
-    }
-
-    /**updates distance travelled in autonomous, to determine error in path following */
-    private void updateAutoDistance() {
-        for (int i = 0; i < modules.length; i++) {
-            autoTempX += (modules[i].getPosition() - lastX[i]) * Math.cos(Math.toRadians(modules[i].getAngle()));
-            autoTempY += (modules[i].getPosition() - lastY[i]) * Math.sin(Math.toRadians(modules[i].getAngle()));
-            //System.out.println("Auto temp X and Y" + autoTempX + "And Y " + autoTempY);
-            lastX[i] = modules[i].getPosition();
-            lastY[i] = modules[i].getPosition();
-        }
-        //posX += autoTempX/modules.length;
-        //posY += autoTempY/modules.length;
-        autoTravelled += Math.abs(Math.hypot(autoTempX/modules.length, autoTempY/modules.length))/10000;
-        autoTempX = 0;
-        autoTempY = 0;
-        //System.out.println("AutoTravelled: " + autoTravelled);
     }
 
     /**
