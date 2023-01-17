@@ -86,26 +86,21 @@ public class SwerveDrive extends SwerveDriveTemplate {
             }
         }
         //get x and y speeds
-        //xSpeed = -xSpeedLimiter.calculate(-leftStickX.getValue());
-        xSpeed = leftStickX.getValue();
-        ySpeed = leftStickY.getValue();
-        if (Math.abs(leftStickX.getValue()) < DriveConstants.DEADBAND) {
-            xSpeed = 0;
-        }
-        //ySpeed = -ySpeedLimiter.calculate(-leftStickY.getValue());
-        if (Math.abs(leftStickY.getValue()) < DriveConstants.DEADBAND) {
-            ySpeed = 0;
-        }
+        xSpeed = swerveHelper.scaleDeadband(leftStickX.getValue(), DriveConstants.DEADBAND);
+        ySpeed = swerveHelper.scaleDeadband(leftStickY.getValue(), DriveConstants.DEADBAND);
         
+        //reset gyro
         if (source == select && select.getValue()) {
             gyro.setYaw(0.0);
         }
+
+        //assign thrust
         thrustValue = 1 - DriveConstants.DRIVE_THRUST + DriveConstants.DRIVE_THRUST * Math.abs(rightTrigger.getValue());
         xSpeed *= thrustValue;
         ySpeed *= thrustValue;
         rotSpeed *= thrustValue;
 
-        //update auto tracking values
+        //determine snake or pid locks
         if (start.getValue() && (Math.abs(xSpeed) > 0.1 || Math.abs(ySpeed) > 0.1)) {
             rotLocked = true;
             isSnake = true;
@@ -133,23 +128,27 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
         //get rotational joystick
         rotSpeed = rightStickX.getValue()*Math.abs(rightStickX.getValue());
-        //rotSpeed = -rotSpeedLimiter.calculate(-rightStickX.getValue());
-        if (Math.abs(rightStickX.getValue()) < DriveConstants.DEADBAND) rotSpeed = 0;
+        rotSpeed = swerveHelper.scaleDeadband(rotSpeed, DriveConstants.DEADBAND);
+
         //if the rotational joystick is being used, the robot should not be auto tracking heading
         if (rotSpeed != 0) {
             rotLocked = false;
         }
-        if (Math.abs(leftTrigger.getValue())>0.15 && driveState != driveType.CROSS) {
-            driveState = driveType.LL;
-            xSpeed*=0.5;
-            ySpeed*=0.5;
-        }
-        else {
-            if (driveState == driveType.LL) {
-                driveState = driveType.TELEOP;
-                rotLocked = false;
-            }
-        }
+
+        //use the limelight for tracking
+        // if (Math.abs(leftTrigger.getValue())>0.15 && driveState != driveType.CROSS) {
+        //     driveState = driveType.LL;
+        //     xSpeed*=0.5;
+        //     ySpeed*=0.5;
+        // }
+        // else {
+        //     if (driveState == driveType.LL) {
+        //         driveState = driveType.TELEOP;
+        //         rotLocked = false;
+        //     }
+        // }
+
+        //field centric while using the camera
         isFieldCentric = !(rightBumper.getValue() && Math.abs(leftTrigger.getValue()) < 0.15);
         if (!isFieldCentric) {
             rotTarget = 0;
