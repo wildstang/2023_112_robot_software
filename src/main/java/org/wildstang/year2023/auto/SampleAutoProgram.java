@@ -15,8 +15,8 @@ public class SampleAutoProgram extends AutoProgram {
 
     @Override
     protected void defineSteps() {
-        addStep(new PathFollowerStep(new Test().getPath(),
-                (Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE)));
+        //addStep(new PathFollowerStep(new Test().getPath(),
+        //        (Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE)));
     }
 
     @Override
