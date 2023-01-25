@@ -11,7 +11,6 @@ import org.wildstang.year2023.robot.WSOutputs;
 public class arm implements Subsystem  {
 
 private WsSparkMax motor;
-private WsSparkMaxFollowerConfig motorFollower;
 private WsJoystickAxis joystick;
 private WsDigitalInput buttonA;
 private WsDigitalInput buttonB;
