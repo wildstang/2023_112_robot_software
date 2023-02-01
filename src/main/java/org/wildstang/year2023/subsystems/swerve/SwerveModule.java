@@ -7,6 +7,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModule {
@@ -19,6 +20,7 @@ public class SwerveModule {
     private WsSparkMax driveMotor;
     private WsSparkMax angleMotor;
     private AbsoluteEncoder absEncoder;
+    private SlewRateLimiter limiter;
 
     /** Class: SwerveModule
      *  controls a single swerve pod, featuring two motors and one offboard sensor
@@ -36,6 +38,7 @@ public class SwerveModule {
         this.absEncoder.setVelocityConversionFactor(360.0/60.0);
         this.driveMotor.setCoast();
         this.angleMotor.setBrake();
+        this.limiter = new SlewRateLimiter(0.5);
 
         chassisOffset = offset;
         
@@ -120,7 +123,8 @@ public class SwerveModule {
      * @param angle angle to run the module at, bearing degrees
     */
     private void runAtAngle(double angle) {
-        angleMotor.setPosition(((359.99 - angle)+chassisOffset)%360);
+        
+        angleMotor.setPosition(limiter.calculate(((359.99 - angle)+chassisOffset)%360));
     }
 
     /**runs module drive at specified power [-1, 1] 
