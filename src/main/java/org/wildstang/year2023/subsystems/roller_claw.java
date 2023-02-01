@@ -21,7 +21,7 @@ private double rollerSpeed;
     @Override
     public void init() {
 
-        roller = (WsSparkMax) WSOutputs.ROLLER.get();
+        roller = (WsSparkMax) WSOutputs.CLAW.get();
         rightTrigger = (WsAnalogInput) WSInputs.MANIPULATOR_RIGHT_TRIGGER.get();
         leftTrigger = (WsAnalogInput) WSInputs.MANIPULATOR_LEFT_TRIGGER.get();
 
