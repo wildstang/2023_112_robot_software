@@ -1,5 +1,7 @@
 package org.wildstang.year2023.robot;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+
 /**
  * CAN Constants are stored here.
  * We primarily use CAN to communicate with Talon motor controllers.
@@ -30,6 +32,8 @@ public final class CANConstants {
     public static final int ANGLE3 = 16;
     public static final int DRIVE4 = 17;
     public static final int ANGLE4 = 18;
+    public static final int INTAKE1 = 0;
+   
     
     
 }
