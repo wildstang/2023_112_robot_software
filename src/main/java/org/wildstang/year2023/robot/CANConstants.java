@@ -30,6 +30,8 @@ public final class CANConstants {
     public static final int ANGLE3 = 16;
     public static final int DRIVE4 = 17;
     public static final int ANGLE4 = 18;
+
+    public static final int ARM = 23;
     
     
 }

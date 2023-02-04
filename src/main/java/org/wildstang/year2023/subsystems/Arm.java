@@ -1,9 +1,10 @@
 package org.wildstang.year2023.subsystems;
 
+import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
-//import org.wildstang.hardware.roborio.outputs.WsPhoenix;
+import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
 
@@ -11,12 +12,12 @@ import org.wildstang.year2023.robot.WSOutputs;
  * Sample Subsystem that controls a motor with a joystick.
  * @author Liam
  */
-public class SampleSubsystem implements Subsystem {
+public class Arm implements Subsystem {
     // inputs
-    WsJoystickAxis joystick;
+    private WsJoystickAxis joystick;
 
     // outputs
-    //WsPhoenix motor;
+    private WsSparkMax armMotor;
 
     // states
     double speed;
@@ -24,11 +25,12 @@ public class SampleSubsystem implements Subsystem {
 
     @Override
     public void init() {
-        joystick = (WsJoystickAxis) WSInputs.DRIVER_LEFT_JOYSTICK_Y.get();
 
-        //motor = (WsPhoenix) WSOutputs.TEST_MOTOR.get();
+        joystick = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_Y);
+        joystick.addInputListener(this);
+        armMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM);
+        resetState();
 
-        speed = 0;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class SampleSubsystem implements Subsystem {
 
     @Override
     public void update() {
-        //motor.setValue(speed);
+        armMotor.setSpeed(speed);
     }
 
     @Override
@@ -46,6 +48,8 @@ public class SampleSubsystem implements Subsystem {
         if (source == joystick) {
             speed = joystick.getValue();
         }
+
+        System.out.println(speed);
     }
 
     @Override
