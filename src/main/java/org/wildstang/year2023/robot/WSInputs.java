@@ -96,7 +96,7 @@ public enum WSInputs implements Inputs {
     // ---------------------------------
     // Manipulator Joysticks
     // ---------------------------------
-    MANIPULATOR_LEFT_JOYSTICK_Y  ("Manipulator left joystick y",  new WsJSJoystickInputConfig(1, JoystickConstants.LEFT_JOYSTICK_Y)),
+    MANIPULATOR_LEFT_JOYSTICK_Y  ("Arm motion",  new WsJSJoystickInputConfig(1, JoystickConstants.LEFT_JOYSTICK_Y)),
     MANIPULATOR_LEFT_JOYSTICK_X  ("Manipulator left joystick x",  new WsJSJoystickInputConfig(1, JoystickConstants.LEFT_JOYSTICK_X)),
     MANIPULATOR_RIGHT_JOYSTICK_Y ("Manipulator right joystick y", new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_Y)),
     MANIPULATOR_RIGHT_JOYSTICK_X ("Manipulator right joystick x", new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_X)),
@@ -126,8 +126,8 @@ public enum WSInputs implements Inputs {
     // ---------------------------------
     // Manipulator Triggers
     // ---------------------------------
-    MANIPULATOR_LEFT_TRIGGER  ("Manipulator left trigger",  new WsJSJoystickInputConfig(1, JoystickConstants.LEFT_TRIGGER)),
-    MANIPULATOR_RIGHT_TRIGGER ("Manipulator right trigger", new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_TRIGGER)),
+    MANIPULATOR_LEFT_TRIGGER  ("Roller claw backward",  new WsJSJoystickInputConfig(1, JoystickConstants.LEFT_TRIGGER)),
+    MANIPULATOR_RIGHT_TRIGGER ("Roller claw forward", new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_TRIGGER)),
 
     // ********************************
     // Digital IOs

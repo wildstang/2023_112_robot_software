@@ -9,7 +9,7 @@ import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxFollowerConfig;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
 
-public class arm implements Subsystem  {
+public class Arm implements Subsystem  {
 
 private WsSparkMax motor;
 private WsJoystickAxis joystick;
@@ -91,7 +91,7 @@ private boolean preset;
 
     @Override
     public String getName() {
-        return "arm";
+        return "Arm";
     }
 
     @Override
