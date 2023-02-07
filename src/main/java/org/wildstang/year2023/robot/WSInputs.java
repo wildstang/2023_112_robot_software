@@ -105,9 +105,9 @@ public enum WSInputs implements Inputs {
     // Manipulator DPAD Buttons
     // ---------------------------------
     MANIPULATOR_DPAD_DOWN  ("Manipulator dpad down",  new WsDPadButtonInputConfig(1, JoystickConstants.DPAD_Y_DOWN)),
-    MANIPULATOR_DPAD_LEFT  ("Arm preset two",  new WsDPadButtonInputConfig(1, JoystickConstants.DPAD_X_LEFT)),
-    MANIPULATOR_DPAD_RIGHT ("Arm preset three", new WsDPadButtonInputConfig(1, JoystickConstants.DPAD_X_RIGHT)),
-    MANIPULATOR_DPAD_UP    ("Arm preset one",    new WsDPadButtonInputConfig(1, JoystickConstants.DPAD_Y_UP)),
+    MANIPULATOR_DPAD_LEFT  ("Arm preset position two",  new WsDPadButtonInputConfig(1, JoystickConstants.DPAD_X_LEFT)),
+    MANIPULATOR_DPAD_RIGHT ("Arm preset position three", new WsDPadButtonInputConfig(1, JoystickConstants.DPAD_X_RIGHT)),
+    MANIPULATOR_DPAD_UP    ("Arm preset position one",    new WsDPadButtonInputConfig(1, JoystickConstants.DPAD_Y_UP)),
 
     // ---------------------------------
     // Manipulator Buttons
