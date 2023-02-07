@@ -10,13 +10,14 @@ import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxFollowerConfig;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
 
-public class roller_claw implements Subsystem {
+public class RollerClaw implements Subsystem {
     
 private WsSparkMax roller;
 private WsAnalogInput rightTrigger;
 private WsAnalogInput leftTrigger;
 private boolean direction;
 private double rollerSpeed;
+private double deadband;
 
     @Override
     public void init() {
@@ -32,18 +33,19 @@ private double rollerSpeed;
 
         direction = true;
         rollerSpeed = 0;
+        deadband = 0.05;
 
     }
 
     @Override
     public void inputUpdate(Input source) {
 
-        if (source == rightTrigger && (Math.abs(rightTrigger.getValue()) > 0.05)){
+        if (source == rightTrigger && (Math.abs(rightTrigger.getValue()) > deadband)){
             direction = true;
             rollerSpeed = Math.abs(rightTrigger.getValue());
         }
 
-        else if (source == leftTrigger && (Math.abs(leftTrigger.getValue()) > 0.05)){
+        else if (source == leftTrigger && (Math.abs(leftTrigger.getValue()) > deadband)){
             direction = false;
             rollerSpeed = Math.abs(leftTrigger.getValue());
         }
@@ -69,7 +71,7 @@ private double rollerSpeed;
 
     @Override
     public String getName() {
-        return "roller_claw";
+        return "Roller Claw";
     }
 
     @Override
