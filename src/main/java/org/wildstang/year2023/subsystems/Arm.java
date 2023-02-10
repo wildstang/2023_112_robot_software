@@ -19,6 +19,13 @@ private WsDigitalInput buttonC;
 private double motorSpeed;
 private int position;
 private boolean preset;
+private static final double pValue = 0.1;
+private static final double iValue = 0;
+private static final double dValue = 0;
+private static final double pos1 = 90;
+private static final double pos2 = 180;
+private static final double pos3 = 270;
+
 
 
     @Override
@@ -27,6 +34,7 @@ private boolean preset;
         motor = (WsSparkMax) WSOutputs.ARM.get();
         motor.initClosedLoop(0.5, 0, 0, 0);
         motor.setCurrentLimit(40, 40, 0);
+        motor.initClosedLoop(pValue, iValue, dValue, 0);
         joystick = (WsJoystickAxis) WSInputs.MANIPULATOR_LEFT_JOYSTICK_Y.get();
         buttonA = (WsDigitalInput) WSInputs.MANIPULATOR_DPAD_UP.get();
         buttonB = (WsDigitalInput) WSInputs.MANIPULATOR_DPAD_LEFT.get();
@@ -46,7 +54,7 @@ private boolean preset;
 
         if (source == joystick && (Math.abs(joystick.getValue()) > 0.10)) {
 
-            motorSpeed = joystick.getValue();
+            motorSpeed = 1;
             preset = false;
 
         }
@@ -76,14 +84,14 @@ private boolean preset;
         }
         
         /* 
-        if (position == 1 && preset == true){
-            motor.setPosition(000);
+        if (position == 1){
+            setPosition(pos1);
         }
-        if (position == 2 && preset == true){
-            motor.setPosition(000);
+        if (position == 2){
+            setPosition(pos2);
         }
-        if (position == 3 && preset == true){
-            motor.setPosition(000);
+        if (position == 3){
+            setPosition(pos3);
         }
         */
 
