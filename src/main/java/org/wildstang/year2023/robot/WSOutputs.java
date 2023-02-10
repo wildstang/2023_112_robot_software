@@ -10,7 +10,9 @@ import org.wildstang.hardware.roborio.outputs.config.WsPhoenixConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsRemoteAnalogOutputConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsI2COutputConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsMotorControllers;
+import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.roborio.outputs.config.WsDigitalOutputConfig;
+import org.wildstang.hardware.roborio.outputs.config.WsDoubleSolenoidConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxFollowerConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSolenoidConfig;
@@ -58,6 +60,7 @@ public enum WSOutputs implements Outputs {
     // Solenoids
     // ********************************
     TEST_SOLENOID("Test Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
+    GRIPPER_SOLENOID("Gripper Solenoid", new WsDoubleSolenoidConfig(PneumaticsModuleType.REVPH,1,2,WsDoubleSolenoidState.FORWARD)),
     
     // ********************************
     // Relays

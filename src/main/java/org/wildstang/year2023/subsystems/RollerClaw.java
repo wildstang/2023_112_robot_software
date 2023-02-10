@@ -1,10 +1,14 @@
 package org.wildstang.year2023.subsystems;
 
+import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.roborio.inputs.WsAnalogInput;
 import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
+import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
 import org.wildstang.hardware.roborio.inputs.WsJoystickToggleButton;
+import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoid;
+import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxFollowerConfig;
 import org.wildstang.year2023.robot.WSInputs;
@@ -15,26 +19,36 @@ public class RollerClaw implements Subsystem {
 private WsSparkMax roller;
 private WsAnalogInput rightTrigger;
 private WsAnalogInput leftTrigger;
+private WsJoystickButton coneButton;
+private WsJoystickButton cubeButton;
 private boolean direction;
 private double rollerSpeed;
 private double deadband;
+private boolean deploy;
+private WsDoubleSolenoid gripper;
 
     @Override
     public void init() {
 
-        roller = (WsSparkMax) WSOutputs.CLAW.get();
-        rightTrigger = (WsAnalogInput) WSInputs.MANIPULATOR_RIGHT_TRIGGER.get();
-        leftTrigger = (WsAnalogInput) WSInputs.MANIPULATOR_LEFT_TRIGGER.get();
+        roller = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLAW);
+        rightTrigger = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
+        rightTrigger.addInputListener(this);
+        leftTrigger = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_TRIGGER);
+        leftTrigger.addInputListener(this);
+        coneButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_SHOULDER);
+        coneButton.addInputListener(this);
+        cubeButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_SHOULDER);
+        cubeButton.addInputListener(this);
+        gripper = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.GRIPPER_SOLENOID);
 
     }
 
     @Override
     public void resetState(){
-
         direction = true;
         rollerSpeed = 0;
         deadband = 0.05;
-
+        deploy = false;
     }
 
     @Override
@@ -55,18 +69,27 @@ private double deadband;
             rollerSpeed = 0;
         }
 
+        if (source == coneButton && coneButton.getValue()){
+            deploy = false;
+        } else if (source == cubeButton && cubeButton.getValue()){
+            deploy = true;
+        }
+
 
     }
     @Override
     public void update() {
-    
         if (direction == true){
             roller.setValue(rollerSpeed);
         }
         if (direction == false){
             roller.setValue(-rollerSpeed);
         }
-
+        if (deploy){
+            gripper.setValue(WsDoubleSolenoidState.REVERSE);
+        } else{
+            gripper.setValue(WsDoubleSolenoidState.FORWARD);
+        }
     }
 
     @Override
