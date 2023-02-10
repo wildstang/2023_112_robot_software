@@ -3,6 +3,8 @@ package org.wildstang.year2023.subsystems;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
+import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoid;
+import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.roborio.outputs.WsSolenoid;
 import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
 import org.wildstang.hardware.roborio.inputs.WsJoystickToggleButton;
@@ -24,6 +26,7 @@ private WsDigitalInput extend;
 private WsSolenoid solenoid;
 private double rollerSpeed;
 private boolean piston;
+private static final double speedConstant = 1;
 
     @Override
     public void init() {
@@ -49,11 +52,11 @@ private boolean piston;
     public void inputUpdate(Input source) {
 
         if (forwardButton.getValue()){
-            rollerSpeed = 1;
+            rollerSpeed = speedConstant;
         }
 
         else if (backwardButton.getValue()){
-            rollerSpeed = -1;
+            rollerSpeed = -speedConstant;
         }
 
         else {
@@ -80,18 +83,18 @@ private boolean piston;
         roller.setValue(rollerSpeed);
         
         if (piston){
-            solenoid.enable();
+            solenoid.enable();;
         }
 
-        if (!piston){
-            solenoid.disable();
+        else {
+            solenoid.disable();;
         }
 
     }
 
     @Override
     public String getName() {
-        return "RollerClaw";
+        return "Roller Claw";
     }
 
     @Override
