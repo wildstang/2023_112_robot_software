@@ -12,6 +12,8 @@ import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+
 public class RollerClaw implements Subsystem {
     
 private WsSparkMax roller;
@@ -52,18 +54,23 @@ private WsDoubleSolenoid gripper;
     @Override
     public void inputUpdate(Input source) {
 
-        if (source == rightTrigger && (Math.abs(rightTrigger.getValue()) > deadband)){
-            direction = true;
+        // if (forwardButton.getValue()){
+        //     rollerSpeed = speedConstant;
+        // }
+
+        // else if (backwardButton.getValue()){
+        //     rollerSpeed = -speedConstant;
+        // }
+
+        // else {
+        //     rollerSpeed = 0;
+        // }
+
+        if (source == rightTrigger){
             rollerSpeed = Math.abs(rightTrigger.getValue());
-        }
-
-        else if (source == leftTrigger && (Math.abs(leftTrigger.getValue()) > deadband)){
-            direction = false;
-            rollerSpeed = Math.abs(leftTrigger.getValue());
-        }
-
-        else {
-            direction = true;
+        } else if(source == leftTrigger){
+            rollerSpeed = -Math.abs(leftTrigger.getValue());
+        } else{
             rollerSpeed = 0;
         }
 
@@ -74,15 +81,28 @@ private WsDoubleSolenoid gripper;
         }
 
 
+        // if (extend.getValue()){
+
+        //     piston = true;
+
+        // }
+
+        // if (retract.getValue()){
+
+        //     piston = false;
+
+        // }
+
     }
     @Override
     public void update() {
         if (direction == true){
             roller.setValue(rollerSpeed);
         }
-        if (direction == false){
-            roller.setValue(-rollerSpeed);
-        }
+
+        // else {
+        //     solenoid.disable();;
+        // }
         if (deploy){
             gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
         } else{
