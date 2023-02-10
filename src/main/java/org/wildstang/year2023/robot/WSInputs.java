@@ -113,11 +113,11 @@ public enum WSInputs implements Inputs {
     // Manipulator Buttons
     // ---------------------------------
     MANIPULATOR_FACE_DOWN             ("Manipulator face down",             new WsJSButtonInputConfig(1, 0)),
-    MANIPULATOR_FACE_LEFT             ("Manipulator face left",             new WsJSButtonInputConfig(1, 2)),
-    MANIPULATOR_FACE_RIGHT            ("Manipulator face right",            new WsJSButtonInputConfig(1, 1)),
+    MANIPULATOR_FACE_LEFT             ("Claw piston retract",             new WsJSButtonInputConfig(1, 2)),
+    MANIPULATOR_FACE_RIGHT            ("Claw piston extend",            new WsJSButtonInputConfig(1, 1)),
     MANIPULATOR_FACE_UP               ("Manipulator face up",               new WsJSButtonInputConfig(1, 3)),
-    MANIPULATOR_LEFT_SHOULDER         ("Manipulator left shoulder",         new WsJSButtonInputConfig(1, 4)),
-    MANIPULATOR_RIGHT_SHOULDER        ("Manipulator right shoulder",        new WsJSButtonInputConfig(1, 5)),
+    MANIPULATOR_LEFT_SHOULDER         ("Claw backward",         new WsJSButtonInputConfig(1, 4)),
+    MANIPULATOR_RIGHT_SHOULDER        ("Claw forward",        new WsJSButtonInputConfig(1, 5)),
     MANIPULATOR_SELECT                ("Manipulator select",                new WsJSButtonInputConfig(1, 6)),
     MANIPULATOR_START                 ("Manipulator start",                 new WsJSButtonInputConfig(1, 7)),
     MANIPULATOR_LEFT_JOYSTICK_BUTTON  ("Manipulator left joystick button",  new WsJSButtonInputConfig(1, 8)),
