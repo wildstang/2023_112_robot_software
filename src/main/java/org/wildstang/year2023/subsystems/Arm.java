@@ -18,7 +18,6 @@ private WsDigitalInput buttonB;
 private WsDigitalInput buttonC;
 private double motorSpeed;
 private int position;
-private boolean preset;
 private static final double pValue = 0.1;
 private static final double iValue = 0;
 private static final double dValue = 0;
@@ -46,7 +45,6 @@ private static final double pos3 = 270;
     public void resetState() {
         position = 0;
         motorSpeed = 0;
-        preset = false;
     }
 
     @Override
@@ -55,22 +53,18 @@ private static final double pos3 = 270;
         if (source == joystick && (Math.abs(joystick.getValue()) > 0.10)) {
 
             motorSpeed = 1;
-            preset = false;
 
         }
 
         //presets
-        if (source == buttonA) { 
+        else if (source == buttonA) { 
             position = 1;
-            preset = true;
         }
-        if (source == buttonB) { 
+        else if (source == buttonB) { 
             position = 2;
-            preset = true;
         }
-        if (source == buttonC) { 
+        else if (source == buttonC) { 
             position = 3;
-            preset = true;
         }
 
 
@@ -79,9 +73,7 @@ private static final double pos3 = 270;
     @Override
     public void update() {
 
-        if(preset == false){
             motor.setValue(motorSpeed);
-        }
         
         /* 
         if (position == 1){
