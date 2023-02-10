@@ -3,22 +3,20 @@ package org.wildstang.year2023.subsystems;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.roborio.inputs.WsAnalogInput;
 import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
 import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
 import org.wildstang.hardware.roborio.inputs.WsJoystickToggleButton;
 import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
-import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxFollowerConfig;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
 
 public class RollerClaw implements Subsystem {
     
 private WsSparkMax roller;
-private WsAnalogInput rightTrigger;
-private WsAnalogInput leftTrigger;
+private WsJoystickAxis rightTrigger;
+private WsJoystickAxis leftTrigger;
 private WsJoystickButton coneButton;
 private WsJoystickButton cubeButton;
 private boolean direction;
@@ -31,9 +29,9 @@ private WsDoubleSolenoid gripper;
     public void init() {
 
         roller = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLAW);
-        rightTrigger = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
+        rightTrigger = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_TRIGGER);
         rightTrigger.addInputListener(this);
-        leftTrigger = (WsAnalogInput) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_TRIGGER);
+        leftTrigger = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_TRIGGER);
         leftTrigger.addInputListener(this);
         coneButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_SHOULDER);
         coneButton.addInputListener(this);
@@ -86,9 +84,9 @@ private WsDoubleSolenoid gripper;
             roller.setValue(-rollerSpeed);
         }
         if (deploy){
-            gripper.setValue(WsDoubleSolenoidState.REVERSE);
+            gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
         } else{
-            gripper.setValue(WsDoubleSolenoidState.FORWARD);
+            gripper.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
         }
     }
 
