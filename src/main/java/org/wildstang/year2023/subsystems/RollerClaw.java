@@ -32,7 +32,7 @@ private boolean piston;
         forwardButton = (WsDigitalInput) WSInputs.MANIPULATOR_RIGHT_SHOULDER.get();
         backwardButton = (WsDigitalInput) WSInputs.MANIPULATOR_LEFT_SHOULDER.get();
         retract = (WsDigitalInput) WSInputs.MANIPULATOR_FACE_LEFT.get();
-        extend = (WsDigitalInput) WSInputs.MANIPULATOR_FACE_DOWN.get();
+        extend = (WsDigitalInput) WSInputs.MANIPULATOR_FACE_RIGHT.get();
         solenoid = (WsSolenoid)WSOutputs.CLAW_SOLENOID.get();
 
     }
