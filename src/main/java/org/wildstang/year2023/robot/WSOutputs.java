@@ -46,6 +46,8 @@ public enum WSOutputs implements Outputs {
     CLAW("Roller Motor", new WsSparkMaxConfig(CANConstants.CLAW, true)),
 
     INTAKE_MOTOR("Intake Roller Motor", new WsSparkMaxConfig(CANConstants.INTAKE, true)),
+
+    ARM("4-bar arm motor", new WsSparkMaxConfig(CANConstants.ARM, true)),
     
 
     // ---------------------------------
