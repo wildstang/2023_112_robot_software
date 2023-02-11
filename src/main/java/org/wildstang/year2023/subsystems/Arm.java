@@ -24,6 +24,7 @@ private static final double dValue = 0;
 private static final double pos1 = 90;
 private static final double pos2 = 180;
 private static final double pos3 = 270;
+private static final double speedConstant = 1;
 
 
 
@@ -52,7 +53,12 @@ private static final double pos3 = 270;
 
         if (source == joystick && (Math.abs(joystick.getValue()) > 0.10)) {
 
-            motorSpeed = 1;
+            if (joystick.getValue() < 0)
+                motorSpeed = -speedConstant;
+
+            else {
+                motorSpeed = speedConstant;
+            }
 
         }
 
