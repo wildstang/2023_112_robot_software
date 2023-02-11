@@ -67,9 +67,9 @@ private WsDoubleSolenoid gripper;
         // }
 
         if (source == rightTrigger){
-            rollerSpeed = Math.abs(rightTrigger.getValue());
+            rollerSpeed = -Math.abs(rightTrigger.getValue());
         } else if(source == leftTrigger){
-            rollerSpeed = -Math.abs(leftTrigger.getValue());
+            rollerSpeed = Math.abs(leftTrigger.getValue());
         } else{
             rollerSpeed = 0;
         }
@@ -108,6 +108,7 @@ private WsDoubleSolenoid gripper;
         } else{
             gripper.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
         }
+        
     }
 
     @Override
