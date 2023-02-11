@@ -94,12 +94,6 @@ public class SwerveDrive extends SwerveDriveTemplate {
             gyro.setYaw(0.0);
         }
 
-        //assign thrust
-        thrustValue = 1 - DriveConstants.DRIVE_THRUST + DriveConstants.DRIVE_THRUST * Math.abs(rightTrigger.getValue());
-        xSpeed *= thrustValue;
-        ySpeed *= thrustValue;
-        rotSpeed *= thrustValue;
-
         //determine snake or pid locks
         if (start.getValue() && (Math.abs(xSpeed) > 0.1 || Math.abs(ySpeed) > 0.1)) {
             rotLocked = true;
@@ -135,6 +129,12 @@ public class SwerveDrive extends SwerveDriveTemplate {
             rotLocked = false;
         }
 
+        //assign thrust
+        thrustValue = 1 - DriveConstants.DRIVE_THRUST + DriveConstants.DRIVE_THRUST * Math.abs(rightTrigger.getValue());
+        xSpeed *= thrustValue;
+        ySpeed *= thrustValue;
+        rotSpeed *= thrustValue;
+
         //use the limelight for tracking
         // if (Math.abs(leftTrigger.getValue())>0.15 && driveState != driveType.CROSS) {
         //     driveState = driveType.LL;
@@ -149,11 +149,11 @@ public class SwerveDrive extends SwerveDriveTemplate {
         // }
 
         //field centric while using the camera
-        isFieldCentric = !(rightBumper.getValue() && Math.abs(leftTrigger.getValue()) < 0.15);
-        if (!isFieldCentric) {
-            rotTarget = 0;
-            rotSpeed *= 0.25;
-        }
+        // isFieldCentric = !(rightBumper.getValue() && Math.abs(leftTrigger.getValue()) < 0.15);
+        // if (!isFieldCentric) {
+        //     rotTarget = 0;
+        //     rotSpeed *= 0.25;
+        // }
     }
  
     @Override
