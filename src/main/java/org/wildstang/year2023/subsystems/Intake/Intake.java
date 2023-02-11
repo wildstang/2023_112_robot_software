@@ -8,7 +8,7 @@ import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
 
-public class Deployable implements Subsystem {
+public class Intake implements Subsystem {
 
     private WsSparkMax intake1;
     private WsJoystickButton deployRevIntake;
@@ -96,7 +96,7 @@ public class Deployable implements Subsystem {
     @Override
     public String getName() {
         // TODO Auto-generated method stub
-        return "Deployable";
+        return "Intake";
     }
 
 
