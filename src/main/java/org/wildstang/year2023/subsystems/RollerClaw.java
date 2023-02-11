@@ -82,13 +82,7 @@ private static final double speedConstant = 1;
     
         roller.setValue(rollerSpeed);
         
-        if (piston){
-            solenoid.enable();;
-        }
-
-        else {
-            solenoid.disable();;
-        }
+        solenoid.setValue(piston);
 
     }
 
