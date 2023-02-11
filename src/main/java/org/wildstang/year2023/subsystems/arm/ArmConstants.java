@@ -17,9 +17,11 @@ public final class ArmConstants{
     public static final double RATIO = 180;  // arm reduction
     public static final double STALL_TORQUE = 3.5 * RATIO;  // total driving stall torque, Nm
     public static final double OFFSET = 66;  //arm offset
-    public static final double HIGH_POS = .2;
+    public static final double HIGH_POS = .9;
     public static final double MID_POS = 1.1;
     public static final double LOW_POS = 2.8;
+    public static final double CONE_RIGHTING_POS = 2.45;
+    public static final double SUBSTATION_POS = .95;
     public static final double STOW_POS = -OFFSET/RATIO*2*Math.PI;
     public static final double POS_DEADBAND = 0.1;
     public static final double SOFT_STOP_LOW = -OFFSET;

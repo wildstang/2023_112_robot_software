@@ -23,6 +23,8 @@ public class Arm implements Subsystem {
     private WsDPadButton midGoal;
     private WsDPadButton lowGoal;
     private WsDPadButton stow;
+    private WsJoystickButton righting;
+    private WsJoystickButton substation;
 
     // outputs
     private WsSparkMax armMotor;
@@ -49,6 +51,10 @@ public class Arm implements Subsystem {
         lowGoal.addInputListener(this);
         stow = (WsDPadButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_DPAD_RIGHT);
         stow.addInputListener(this);
+        righting = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_DOWN);
+        righting.addInputListener(this);
+        substation = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_LEFT);
+        substation.addInputListener(this);
         armMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM);
         resetState();
 
@@ -133,6 +139,10 @@ public class Arm implements Subsystem {
             goalPos = ArmConstants.LOW_POS;
         } else if (source == stow){
             goalPos = ArmConstants.STOW_POS;
+        } else if (source == righting){
+            goalPos = ArmConstants.CONE_RIGHTING_POS;
+        } else if (source == substation){
+            goalPos = ArmConstants.SUBSTATION_POS;
         }
     }
 
