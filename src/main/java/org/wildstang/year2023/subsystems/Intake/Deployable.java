@@ -12,11 +12,15 @@ public class Deployable implements Subsystem {
 
     private WsSparkMax intake1;
     private WsJoystickButton deployRevIntake;
+    private WsJoystickButton backwards; 
+
     private WsSolenoid deployable1;
     private WsSolenoid deployable2;
 
     //All variables used
     private boolean intakeCall;
+    private boolean backCall; 
+     
    
     
 
@@ -28,6 +32,10 @@ public class Deployable implements Subsystem {
             intakeCall = !(intakeCall);
 
         }
+
+        if (source == backwards){
+            backCall = !(backCall);
+        }
     }
     
     @Override
@@ -37,11 +45,14 @@ public class Deployable implements Subsystem {
 
         deployRevIntake = (WsJoystickButton) WSInputs.MANIPULATOR_DPAD_DOWN.get();
         deployRevIntake.addInputListener(this);
+        backwards = (WsJoystickButton) WSInputs.MANIPULATOR_DPAD_UP.get();
 
         deployable1 = (WsSolenoid) WSOutputs.DEPLOYABLE1.get();
         deployable2 = (WsSolenoid) WSOutputs.DEPLOYABLE2.get();
 
-        intakeCall = false; 
+        intakeCall = false;
+        backCall = false; 
+        
 
     }
 
@@ -56,6 +67,16 @@ public class Deployable implements Subsystem {
         // TODO Auto-generated method stub
         if (intakeCall){
             intake1.setValue(1); 
+            deployable1.setValue(true);
+            deployable2.setValue(true);
+        } else {
+            intake1.setValue(0);
+            deployable1.setValue(false);
+            deployable2.setValue(false);
+        }
+
+        if (backCall){
+            intake1.setValue(-1);
             deployable1.setValue(true);
             deployable2.setValue(true);
         } else {
