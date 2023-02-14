@@ -18,8 +18,8 @@ import org.wildstang.year2023.robot.WSOutputs;
  */
 public class CubeIntake implements Subsystem {
     // inputs
-    WsJoystickAxis joystick;
-    WsJoystickButton deployIntake;
+    WsJoystickButton intake;
+    WsJoystickButton outtake;
 
     // outputs
     WsSparkMax roller;
@@ -29,13 +29,16 @@ public class CubeIntake implements Subsystem {
     double speed;
     boolean deploy;
 
+    private static final double IN_SPEED = 0.8;
+    private static final double OUT_SPEED = -0.5;
+
 
     @Override
     public void init() {
-        joystick = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_Y);
-        joystick.addInputListener(this);
-        deployIntake = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_RIGHT);
-        deployIntake.addInputListener(this);
+        intake = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_RIGHT);
+        intake.addInputListener(this);
+        outtake = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_UP);
+        outtake.addInputListener(this);
 
         roller = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.INTAKE_MOTOR);
         cylinder = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_SOLENOID);
@@ -61,11 +64,22 @@ public class CubeIntake implements Subsystem {
 
     @Override
     public void inputUpdate(Input source) {
-        if (source == joystick) {
-            speed = joystick.getValue();
-        }
-        if (source == deployIntake){
-            deploy = deployIntake.getValue();
+        if (source == intake){
+            if (intake.getValue()){
+                deploy = true;
+                speed = IN_SPEED;
+            } else {
+                deploy = false;
+                speed = 0;
+            }
+        } else if (source == outtake){
+            if (outtake.getValue()){
+                deploy = true;
+                speed = OUT_SPEED;
+            } else {
+                deploy = false;
+                speed = 0;
+            }
         }
     }
 

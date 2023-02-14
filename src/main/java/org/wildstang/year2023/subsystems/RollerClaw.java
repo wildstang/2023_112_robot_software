@@ -3,6 +3,7 @@ package org.wildstang.year2023.subsystems;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
+import org.wildstang.hardware.roborio.inputs.WsDPadButton;
 import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
 import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
 import org.wildstang.hardware.roborio.inputs.WsJoystickToggleButton;
@@ -21,6 +22,7 @@ private WsJoystickAxis rightTrigger;
 private WsJoystickAxis leftTrigger;
 private WsJoystickButton coneButton;
 private WsJoystickButton cubeButton;
+private WsDPadButton stow;
 private boolean direction;
 private double rollerSpeed;
 private double deadband;
@@ -39,6 +41,8 @@ private WsDoubleSolenoid gripper;
         coneButton.addInputListener(this);
         cubeButton = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_SHOULDER);
         cubeButton.addInputListener(this);
+        stow = (WsDPadButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_DPAD_DOWN);
+        stow.addInputListener(this);
         gripper = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.GRIPPER_SOLENOID);
 
     }
@@ -78,6 +82,8 @@ private WsDoubleSolenoid gripper;
             deploy = false;
         } else if (source == cubeButton && cubeButton.getValue()){
             deploy = true;
+        } else if (source == stow){
+            deploy = false;
         }
 
 

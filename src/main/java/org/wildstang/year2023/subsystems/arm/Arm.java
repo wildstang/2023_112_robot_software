@@ -31,8 +31,9 @@ public class Arm implements Subsystem {
 
     // states
     double speed;
-    double curPos;
-    double goalPos, curErr, prevErr, setpoint;
+    double curPos, goalPos, curErr, prevErr;
+    double curVel, goalVel, curVelErr, prevVelErr;
+    double setpoint;
     double p,i,d,f;
     double kP, kI, kD;
     double prevOut, curOut;
@@ -40,6 +41,13 @@ public class Arm implements Subsystem {
 
     @Override
     public void init() {
+        initInputs();
+        armMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM);
+        resetState();
+
+    }
+
+    public void initInputs(){
 
         joystick = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.MANIPULATOR_RIGHT_JOYSTICK_Y);
         joystick.addInputListener(this);
@@ -55,9 +63,6 @@ public class Arm implements Subsystem {
         righting.addInputListener(this);
         substation = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_FACE_LEFT);
         substation.addInputListener(this);
-        armMotor = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.ARM);
-        resetState();
-
     }
 
     @Override
@@ -75,6 +80,10 @@ public class Arm implements Subsystem {
     @Override
     public void update() {
         curPos = -(armMotor.getPosition()+ArmConstants.OFFSET)/ArmConstants.RATIO*2*Math.PI;
+        curVel = armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI;
+        goalVel = getVelocityTarget(curVel, curErr);
+        curVelErr = goalVel - curVel;
+        curOut = goalVel * ArmConstants.kV + curVelErr * ArmConstants.VEL_P;
         //f = -Math.sin(curPos) * ArmConstants.ARM_TORQUE/ArmConstants.STALL_TORQUE; //7.5 lbs 20.25in/ (3.5 Nm * 117.67) * sin(curPos)
         curErr = goalPos-curPos;
 
@@ -98,28 +107,26 @@ public class Arm implements Subsystem {
             i = -1;
         }
         d = (curErr - prevErr) * kD;
-        setpoint = p+i+d+f;
+        curOut = p+i+d+f;
         if (curPos < ArmConstants.SOFT_STOP_LOW && setpoint < 0){
-            setpoint = 0;
+            curOut = 0;
         } else if (curPos > ArmConstants.SOFT_STOP_HIGH && setpoint > 0){
-            setpoint = 0;
+            curOut = 0;
         }
-        if (Math.abs(setpoint - prevOut) > ArmConstants.RAMP_LIMIT){
-            curOut = prevOut + Math.signum(setpoint - prevOut) * ArmConstants.RAMP_LIMIT;
-        } else{
-            curOut = setpoint;
+        if (Math.abs(curOut - prevOut) > ArmConstants.RAMP_LIMIT){
+            curOut = prevOut + Math.signum(curOut - prevOut) * ArmConstants.RAMP_LIMIT;
         }
         
         armMotor.setSpeed(-curOut);
         prevErr = curErr;
         prevOut = curOut;
-        SmartDashboard.putNumber("arm encoder", curPos);
-        SmartDashboard.putNumber("arm error", curErr);
-        SmartDashboard.putNumber("arm P value", p);
-        SmartDashboard.putNumber("arm F value", f);
+        SmartDashboard.putNumber("arm pos", curPos);
+        SmartDashboard.putNumber("arm pos error", curErr);
         SmartDashboard.putNumber("arm goal pos", goalPos);
-        SmartDashboard.putNumber("arm setpoint", setpoint);
-        SmartDashboard.putNumber("arm D value", d);
+        SmartDashboard.putNumber("arm output", curOut);
+        SmartDashboard.putNumber("arm velocity", curVel);
+        SmartDashboard.putNumber("arm goal vel", goalVel);
+        SmartDashboard.putNumber("arm vel error", curVelErr);
     }
 
     @Override
@@ -153,5 +160,25 @@ public class Arm implements Subsystem {
 
     @Override
     public void selfTest() {
+    }
+
+    public double getVelocityTarget(double curVel, double curErr){
+        if (curErr > 0){
+            if (curErr <= curVel * Math.abs(curVel/ArmConstants.MAX_ACC) * .5){
+                return curVel - (ArmConstants.MAX_ACC*.02);
+            } else if (curVel < ArmConstants.MAX_VEL){
+                return Math.min(curVel + ArmConstants.MAX_ACC * .02, ArmConstants.MAX_VEL);
+            } else{
+                return ArmConstants.MAX_VEL;
+            }
+        } else {
+            if (curErr >= curVel * Math.abs(curVel/ArmConstants.MAX_ACC) * .5){
+                return curVel + (ArmConstants.MAX_ACC*.02);
+            } else if (curVel > -ArmConstants.MAX_VEL){
+                return Math.max(curVel - ArmConstants.MAX_ACC * .02, -ArmConstants.MAX_VEL);
+            } else{
+                return -ArmConstants.MAX_VEL;
+            }
+        }
     }
 }

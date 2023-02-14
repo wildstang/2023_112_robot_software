@@ -27,4 +27,9 @@ public final class ArmConstants{
     public static final double SOFT_STOP_LOW = -OFFSET;
     public static final double SOFT_STOP_HIGH = 2.85;
 
+    public static final double MAX_VEL = 5676 / RATIO *2*Math.PI/60.0 * (1-(ARM_TORQUE/STALL_TORQUE));  // max arm speed, 3.3 rad/s
+    public static final double MAX_ACC = (STALL_TORQUE-ARM_TORQUE) / (MASS * Math.pow(COM, 2));  // maximum acceleration, 69.4 rad/s/s
+    public static final double MAX_DEC = -MAX_ACC;  // maximum deceleration
+    public static final double kV = (5676 / RATIO *2*Math.PI/60.0) / 12;  // motor kV adjusted for units and gear ratio, (rad/s)/volt
+    public static final double VEL_P = 0.0;
 }
