@@ -94,6 +94,10 @@ public class SwerveDrive extends SwerveDriveTemplate {
             gyro.setYaw(0.0);
         }
 
+        if (source == rightBumper && rightBumper.getValue()){
+            isFieldCentric = !isFieldCentric;
+        }
+
         //determine snake or pid locks
         if (start.getValue() && (Math.abs(xSpeed) > 0.1 || Math.abs(ySpeed) > 0.1)) {
             rotLocked = true;
@@ -106,18 +110,22 @@ public class SwerveDrive extends SwerveDriveTemplate {
         if (source == faceUp && faceUp.getValue()){
             rotTarget = 0.0;
             rotLocked = true;
+            isFieldCentric = true;
         }
         if (source == faceLeft && faceLeft.getValue()){
             rotTarget = 270.0;
             rotLocked = true;
+            isFieldCentric = true;
         }
         if (source == faceDown && faceDown.getValue()){
             rotTarget = 180.0;
             rotLocked = true;
+            isFieldCentric = true;
         }
         if (source == faceRight && faceRight.getValue()){
             rotTarget = 90.0;
             rotLocked = true;
+            isFieldCentric = true;
         }
 
         //get rotational joystick
@@ -127,6 +135,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
         //if the rotational joystick is being used, the robot should not be auto tracking heading
         if (rotSpeed != 0) {
             rotLocked = false;
+            rotTarget = 0.0;
         }
 
         //assign thrust

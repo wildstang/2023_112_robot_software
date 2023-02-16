@@ -1,13 +1,13 @@
 package org.wildstang.year2023.subsystems.arm;
 
 public final class ArmConstants{
-    public static final double kP_UP = 0.6;
-    public static final double kI_UP = 0.002;//.003
-    public static final double kD_UP = 0.18; //0.2
+    public static final double kP_UP = 1.0;
+    public static final double kI_UP = 0.0;//.003
+    public static final double kD_UP = 0.0; //0.2
 
-    public static final double kP_DOWN = 0.5;
-    public static final double kI_DOWN = 0.003;//.003
-    public static final double kD_DOWN = 0.05; //0.2
+    public static final double kP_DOWN = 0.6;
+    public static final double kI_DOWN = 0.002;//.003
+    public static final double kD_DOWN = 0.18; //0.2
 
     public static final double RAMP_LIMIT = .04;
     
@@ -29,13 +29,13 @@ public final class ArmConstants{
 
     // Soft limits
     public static final double SOFT_STOP_LOW = STOW_POS;
-    public static final double SOFT_STOP_HIGH = 2.85;
+    public static final double SOFT_STOP_HIGH = 2.8;
 
-    public static final double MAX_VEL = 5676 / RATIO *2*Math.PI/60.0 * (1-(ARM_TORQUE/STALL_TORQUE));  // max arm speed, 3.2 rad/s
-    public static final double MAX_ACC = .5*(STALL_TORQUE-ARM_TORQUE) / (MASS * Math.pow(COM, 2));  // maximum acceleration, 69.4 rad/s/s
+    public static final double MAX_VEL = 3.2;//5676 / RATIO *2*Math.PI/60.0 * (1-(ARM_TORQUE/STALL_TORQUE));  // max arm speed, 3.2 rad/s
+    public static final double MAX_ACC = 4.0;//.5*(STALL_TORQUE-ARM_TORQUE) / (MASS * Math.pow(COM, 2));  // maximum acceleration, 69.4 rad/s/s
     public static final double MAX_DEC = -MAX_ACC;  // maximum deceleration
     public static final double kV = (5676 / RATIO *2*Math.PI/60.0) / 12;  // motor kV adjusted for units and gear ratio, (rad/s)/volt
-    public static final double VEL_P = 0.0;
+    public static final double VEL_P = .005;
     
     public static final double POS_DB = .05;  // position deadband, rad  starting value (ARM_TORQUE/STALL_TORQUE)/kP
     public static final double VEL_DB = .1;  // output deadband, rad/s  starting value (ARM_TORQUE/STALL_TORQUE)/kV

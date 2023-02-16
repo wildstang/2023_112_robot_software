@@ -103,7 +103,7 @@ private static final double HOLD_SPEED = 0.2;
         } else if (source == intake) {
             if (intake.getValue()){
                 deploy = true;
-                rollerSpeed = IN_SPEED;
+                rollerSpeed = 0.5;
             } else{
                 deploy = false;
             }

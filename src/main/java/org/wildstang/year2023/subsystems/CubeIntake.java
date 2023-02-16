@@ -31,7 +31,7 @@ public class CubeIntake implements Subsystem {
 
     int i;
 
-    private static final double IN_SPEED = 0.8;
+    private static final double IN_SPEED = 0.5;
     private static final double OUT_SPEED = -0.5;
 
 
