@@ -24,8 +24,9 @@ public class ArmEverybot implements Subsystem
 
     @Override
     public void inputUpdate(Input sourceInput) {
+        if (sourceInput == lefttrigger || sourceInput == righttrigger){
             if (sourceInput == lefttrigger) {
-                if (Math.abs(lefttrigger.getValue()) < 0.3){
+                if (Math.abs(lefttrigger.getValue()) > 0.3){
                     mSpeed = -0.8;
                 }
                 else {
@@ -54,7 +55,8 @@ public class ArmEverybot implements Subsystem
 
             }
 
-            };
+            }
+        }
 }        // TODO Auto-generated method stub
     
 
@@ -67,7 +69,7 @@ public class ArmEverybot implements Subsystem
         lefttrigger.addInputListener(this);
         righttrigger.addInputListener(this);
         m1 = (WsSparkMax) WSOutputs.TEST_MOTOR.get();
-        m2 = (WsSparkMax) WSOutputs.TEST_MOTOR.get();
+        m2 = (WsSparkMax) WSOutputs.TEST_MOTOR2.get();
         mSpeed = 0;
         dPadButton1 = (WsDPadButton) WSInputs.MANIPULATOR_DPAD_UP.get();
         dPadButton2 = (WsDPadButton) WSInputs.MANIPULATOR_DPAD_DOWN.get();

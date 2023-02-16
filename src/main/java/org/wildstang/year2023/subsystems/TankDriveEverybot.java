@@ -16,6 +16,7 @@ public class TankDriveEverybot implements Subsystem
     @Override
     public void inputUpdate(Input sourceInput) {
         // TODO Auto-generated method stub
+       if (sourceInput == forwardTrigger || sourceInput == backTrigger){
         if (sourceInput == forwardTrigger){
             if (Math.abs(forwardTrigger.getValue()) > 0.2){
             motorSpeed = 0.8;
@@ -25,13 +26,14 @@ public class TankDriveEverybot implements Subsystem
           }} 
             
         else if (sourceInput == backTrigger){
-            if (Math.abs(backTrigger.getValue()) < 0.2){
+            if (Math.abs(backTrigger.getValue()) > 0.2){
                 motorSpeed = -0.8;
             }
             else {
                 motorSpeed = 0;
             }
         }
+    }
     }
     @Override
     public void init() {
@@ -41,7 +43,7 @@ public class TankDriveEverybot implements Subsystem
         forwardTrigger.addInputListener(this);
         backTrigger.addInputListener(this);
         motor = (WsSparkMax) WSOutputs.TEST_MOTOR.get();
-        motor2 = (WsSparkMax) WSOutputs.TEST_MOTOR.get();
+        motor2 = (WsSparkMax) WSOutputs.TEST_MOTOR2.get();
         motorSpeed = 0;
     }
     @Override
@@ -53,18 +55,20 @@ public class TankDriveEverybot implements Subsystem
     public void update() {
         // TODO Auto-generated method stub
         motor.setValue(motorSpeed);
+         if (motorSpeed == motor.getValue() || motorSpeed == motor2.getValue()){
             if (motorSpeed == 0){
                 motor.setBrake();
             }
-            else {
+                else {
                 motor.setCoast();
             }
             if (motorSpeed == 0){
                 motor2.setBrake();
             }
-            else {
+                else {
                 motor.setCoast();
             }
+        }
     };
     @Override
     public void resetState() {
