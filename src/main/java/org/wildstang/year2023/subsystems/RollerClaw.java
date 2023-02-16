@@ -32,7 +32,7 @@ private WsDoubleSolenoid gripper;
 private int i;
 
 private static final double IN_SPEED = 1.0;
-private static final double OUT_SPEED = -0.5;
+private static final double OUT_SPEED = -0.4;
 private static final double HOLD_SPEED = 0.2;
 
     @Override
@@ -87,7 +87,7 @@ private static final double HOLD_SPEED = 0.2;
         if (source == rightTrigger){
             rollerSpeed = Math.abs(rightTrigger.getValue());
         } else if(source == leftTrigger){
-            rollerSpeed = -Math.abs(leftTrigger.getValue());
+            rollerSpeed = Math.abs(leftTrigger.getValue()) * OUT_SPEED;
         } else{
             rollerSpeed = 0;
         }
@@ -98,7 +98,7 @@ private static final double HOLD_SPEED = 0.2;
             i = 0;
         } else if (source == cubeButton && cubeButton.getValue()){
             deploy = true;
-            rollerSpeed = IN_SPEED;
+            rollerSpeed = OUT_SPEED;
             i = 0;
         } else if (source == intake) {
             if (intake.getValue()){
