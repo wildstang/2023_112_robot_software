@@ -99,22 +99,19 @@ public class WSSwerveHelper {
         else {
             rotPID = (rotDelta + 360) / 180;
         } 
-        return Math.signum(rotPID) * Math.min(1.0, 2.5*Math.abs(rotPID));
+        return Math.signum(rotPID) * Math.min(Math.abs(rotPID*2.5), 1.0);
     }
 
     /**determines the translational magnitude of the robot in autonomous
      * 
-     * @param pathPos path data for position of the robot, inches
      * @param pathVel path data for velocity of the robot, inches
-     * @param distTravelled distance the robot has travelled, inches
      * @return double for magnitude of translational vector
      */
-    public double getAutoPower(double pathPos, double pathVel, double distTravelled) {
+    public double getAutoPower(double pathVel) {
         if (pathVel == 0) return 0;
         double guess = pathVel * DriveConstants.DRIVE_F_V + DriveConstants.DRIVE_F_K + 0.02 * (pathVel - prevVel) * DriveConstants.DRIVE_F_I;
         this.prevVel = pathVel;
-        double check = DriveConstants.DRIVE_P * (pathPos - distTravelled);
-        return -(guess + check);
+        return -(guess);
     }
 
     /**returns magnitude of vector components */
@@ -136,7 +133,7 @@ public class WSSwerveHelper {
     
     public double scaleDeadband(double input, double deadband){
         if (Math.abs(input) < Math.abs(deadband)) return 0.0;
-        return Math.signum(input) * ((Math.abs(input) - deadband) / (1.0 - deadband));
+        return Math.signum(input)*((Math.abs(input) - deadband) / (1.0 - deadband));
     }
     
 }

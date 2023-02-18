@@ -1,8 +1,6 @@
 package org.wildstang.year2023.subsystems.swerve;
 
-import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.Pigeon2;
-import com.kauailabs.navx.frc.AHRS;
 
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.Input;
@@ -16,7 +14,6 @@ import org.wildstang.year2023.robot.WSSubsystems;
 import org.wildstang.year2023.subsystems.targeting.AimHelper;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**Class: SwerveDrive
@@ -49,22 +46,15 @@ public class SwerveDrive extends SwerveDriveTemplate {
     private boolean isSnake;
     private boolean isFieldCentric;
     private double rotTarget;
-    private double pathPos;
     private double pathVel;
     private double pathHeading;
     private double pathTarget;
-    private double autoTravelled;
-    private double[] lastX = {0,0,0,0};
-    private double[] lastY = {0,0,0,0};
-    private double autoTempX;
-    private double autoTempY;
 
     //private final AHRS gyro = new AHRS(SerialPort.Port.kUSB);
     private final Pigeon2 gyro = new Pigeon2(CANConstants.GYRO);
     public SwerveModule[] modules;
     private SwerveSignal swerveSignal;
     private WSSwerveHelper swerveHelper = new WSSwerveHelper();
-    //private AimHelper limelight;
 
     public enum driveType {TELEOP, AUTO, CROSS, LL};
     public driveType driveState;
@@ -137,32 +127,13 @@ public class SwerveDrive extends SwerveDriveTemplate {
             rotLocked = false;
             rotTarget = 0.0;
         }
-
+        
         //assign thrust
         thrustValue = 1 - DriveConstants.DRIVE_THRUST + DriveConstants.DRIVE_THRUST * Math.abs(rightTrigger.getValue());
         xSpeed *= thrustValue;
         ySpeed *= thrustValue;
         rotSpeed *= thrustValue;
-
-        //use the limelight for tracking
-        // if (Math.abs(leftTrigger.getValue())>0.15 && driveState != driveType.CROSS) {
-        //     driveState = driveType.LL;
-        //     xSpeed*=0.5;
-        //     ySpeed*=0.5;
-        // }
-        // else {
-        //     if (driveState == driveType.LL) {
-        //         driveState = driveType.TELEOP;
-        //         rotLocked = false;
-        //     }
-        // }
-
-        //field centric while using the camera
-        // isFieldCentric = !(rightBumper.getValue() && Math.abs(leftTrigger.getValue()) < 0.15);
-        // if (!isFieldCentric) {
-        //     rotTarget = 0;
-        //     rotSpeed *= 0.25;
-        // }
+        
     }
  
     @Override
@@ -257,21 +228,17 @@ public class SwerveDrive extends SwerveDriveTemplate {
             //ensure rotation is never more than 0.2 to prevent normalization of translation from occuring
             
             //update where the robot is, to determine error in path
-            this.swerveSignal = swerveHelper.setAuto(swerveHelper.getAutoPower(pathPos, pathVel, autoTravelled), pathHeading, rotSpeed, getGyroAngle());
+            this.swerveSignal = swerveHelper.setAuto(swerveHelper.getAutoPower(pathVel), pathHeading, rotSpeed, getGyroAngle());
             drive();        
         }
-        // if (driveState == driveType.LL) {
-        //     //rotSpeed = -limelight.getRotPID();
-        //     this.swerveSignal = swerveHelper.setDrive(xSpeed, ySpeed, rotSpeed, getGyroAngle());
-        //     drive();
-        // }
+        if (driveState == driveType.LL) {}
+
         SmartDashboard.putNumber("Gyro Reading", getGyroAngle());
         SmartDashboard.putNumber("X speed", xSpeed);
         SmartDashboard.putNumber("Y speed", ySpeed);
         SmartDashboard.putNumber("rotSpeed", rotSpeed);
         SmartDashboard.putString("Drive mode", driveState.toString());
         SmartDashboard.putBoolean("rotLocked", rotLocked);
-        SmartDashboard.putNumber("Auto position", pathPos);
         SmartDashboard.putNumber("Auto velocity", pathVel);
         SmartDashboard.putNumber("Auto translate direction", pathHeading);
         SmartDashboard.putNumber("Auto rotation target", pathTarget);
@@ -286,15 +253,12 @@ public class SwerveDrive extends SwerveDriveTemplate {
         setToTeleop();
         rotLocked = false;
         rotTarget = 0.0;
-        pathPos = 0.0;
         pathVel = 0.0;
         pathHeading = 0.0;
         pathTarget = 0.0;
 
         isFieldCentric = true;
         isSnake = false;
-
-        autoTravelled = 0;
     }
 
     @Override
@@ -307,7 +271,6 @@ public class SwerveDrive extends SwerveDriveTemplate {
         for (int i = 0; i < modules.length; i++) {
             modules[i].resetDriveEncoders();
         }
-        //autoTravelled = 0.0;
     }
 
     /** sets the drive to teleop/cross, and sets drive motors to coast */
@@ -320,7 +283,6 @@ public class SwerveDrive extends SwerveDriveTemplate {
         xSpeed = 0;
         ySpeed = 0;
         pathHeading = 0;
-        pathPos = 0;
         pathVel = 0;
         rotLocked = false;
     }
@@ -348,8 +310,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
     }
 
     /**sets autonomous values from the path data file */
-    public void setAutoValues(double position, double velocity, double heading) {
-        pathPos = position;
+    public void setAutoValues(double velocity, double heading) {
         pathVel = velocity;
         pathHeading = heading;
     }
@@ -378,5 +339,5 @@ public class SwerveDrive extends SwerveDriveTemplate {
         if (!isFieldCentric) return 0;
         //limelight.setGyroValue((gyro.getYaw() + 360)%360);
         return (359.99 - gyro.getYaw()+360)%360;
-    }    
+    }  
 }
