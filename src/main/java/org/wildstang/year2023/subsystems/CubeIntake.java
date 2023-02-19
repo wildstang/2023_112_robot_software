@@ -23,6 +23,7 @@ public class CubeIntake implements Subsystem {
 
     // outputs
     WsSparkMax roller;
+    WsSparkMax feed;
     WsDoubleSolenoid cylinder;
 
     // states
@@ -43,6 +44,7 @@ public class CubeIntake implements Subsystem {
         outtake.addInputListener(this);
 
         roller = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.INTAKE_MOTOR);
+        feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
         cylinder = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_SOLENOID);
 
         resetState();
@@ -58,8 +60,10 @@ public class CubeIntake implements Subsystem {
     public void update() {
         if (i >= 25) {
             roller.setValue(speed);
+            feed.setValue(speed);
         } else {
             roller.setValue(0);
+            feed.setValue(speed);
         }
         if (deploy){
             cylinder.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
@@ -101,5 +105,13 @@ public class CubeIntake implements Subsystem {
 
     @Override
     public void selfTest() {
+    }
+
+    public void setDeploy(boolean deploy){
+        this.deploy = true;
+    }
+
+    public void setSpeed(double speed){
+        this.speed = speed;
     }
 }

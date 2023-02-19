@@ -143,4 +143,12 @@ private static final double HOLD_SPEED = 0.2;
     @Override
     public void selfTest() {
     }
+
+    public void setGripper(boolean deploy){
+        this.deploy = deploy;
+    }
+
+    public void setSpeed(double speed){
+        this.rollerSpeed = speed;
+    }
 }

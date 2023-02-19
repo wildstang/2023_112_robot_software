@@ -218,4 +218,12 @@ public class Arm implements Subsystem {
     public double getPositionTarget(double curPos, double prevVel, double nextVel){
         return curPos + (prevVel + nextVel) / 2 * .02;  // current position plus average velocity for next timestep times timestep
     }
+
+    public void setPosTarget(double target){
+        this.setpoint = target;
+    }
+
+    public boolean isAtTarget() {
+        return curErr < ArmConstants.POS_DB && curVel < ArmConstants.VEL_DB;
+    }
 }

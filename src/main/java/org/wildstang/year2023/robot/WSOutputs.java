@@ -1,5 +1,7 @@
 package org.wildstang.year2023.robot;
 
+import javax.swing.plaf.TreeUI;
+
 // expand this and edit if trouble with Ws
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.core.Outputs;
@@ -43,11 +45,14 @@ public enum WSOutputs implements Outputs {
     ANGLE3("Module 3 Angle Motor", new WsSparkMaxConfig(CANConstants.ANGLE3, true)),
     DRIVE4("Module 4 Drive Motor", new WsSparkMaxConfig(CANConstants.DRIVE4, true)),
     ANGLE4("Module 4 Angle Motor", new WsSparkMaxConfig(CANConstants.ANGLE4, true)),
+
     CLAW("Roller Motor", new WsSparkMaxConfig(CANConstants.CLAW, true)),
 
     INTAKE_MOTOR("Intake Roller Motor", new WsSparkMaxConfig(CANConstants.INTAKE, true)),
 
     ARM("4-bar arm motor", new WsSparkMaxConfig(CANConstants.ARM, true)),
+
+    FEED("Feed system motor", new WsSparkMaxConfig(CANConstants.FEED, true)),
     
 
     // ---------------------------------
