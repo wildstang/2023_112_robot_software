@@ -18,6 +18,7 @@ public final class ArmConstants{
     public static final double RATIO = 180;  // arm reduction
     public static final double STALL_TORQUE = 3.5 * RATIO;  // total driving stall torque, Nm
     public static final double OFFSET = 66;  //arm offset, motor rotations
+    public static final double I = 2.0;  // arm moment of intertia, kg m^2
 
     // Position presets
     public static final double HIGH_POS = .9;
@@ -28,8 +29,8 @@ public final class ArmConstants{
     public static final double STOW_POS = -OFFSET/RATIO*2*Math.PI; //-2.303 rad
 
     // Soft limits
-    public static final double SOFT_STOP_LOW = STOW_POS;
-    public static final double SOFT_STOP_HIGH = 2.8;
+    public static final double SOFT_STOP_LOW = -2.263;
+    public static final double SOFT_STOP_HIGH = 2.65;
 
     public static final double MAX_VEL = 3.2;//5676 / RATIO *2*Math.PI/60.0 * (1-(ARM_TORQUE/STALL_TORQUE));  // max arm speed, 3.2 rad/s
     public static final double MAX_ACC = 4.0;//.5*(STALL_TORQUE-ARM_TORQUE) / (MASS * Math.pow(COM, 2));  // maximum acceleration, 69.4 rad/s/s

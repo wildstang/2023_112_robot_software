@@ -87,7 +87,7 @@ private static final double HOLD_SPEED = 0.2;
         if (source == rightTrigger){
             rollerSpeed = Math.abs(rightTrigger.getValue());
         } else if(source == leftTrigger){
-            rollerSpeed = Math.abs(leftTrigger.getValue()) * OUT_SPEED;
+            rollerSpeed = -Math.abs(leftTrigger.getValue());
         } else{
             rollerSpeed = 0;
         }
@@ -103,14 +103,14 @@ private static final double HOLD_SPEED = 0.2;
         } else if (source == intake) {
             if (intake.getValue()){
                 deploy = true;
-                rollerSpeed = 0.5;
+                rollerSpeed = 0.67;
             } else{
                 deploy = false;
             }
         } else if (source == outtake) {
             if (outtake.getValue()){
                 deploy = true;
-                rollerSpeed = OUT_SPEED;
+                rollerSpeed = -0.67;
             } else{
                 deploy = false;
             }

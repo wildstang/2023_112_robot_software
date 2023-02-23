@@ -28,11 +28,12 @@ public class CubeIntake implements Subsystem {
 
     // states
     double speed;
+    // double newSpeed;
     boolean deploy;
 
-    int i;
+    // int i;
 
-    private static final double IN_SPEED = 0.5;
+    private static final double IN_SPEED = 1.0;
     private static final double OUT_SPEED = -0.5;
 
 
@@ -58,40 +59,39 @@ public class CubeIntake implements Subsystem {
 
     @Override
     public void update() {
-        if (i >= 25) {
-            roller.setValue(speed);
-            feed.setValue(speed);
-        } else {
-            roller.setValue(0);
-            feed.setValue(speed);
-        }
+        // if (i>= 25){ // half second delay between cylinder actuation and motor speed change
+        //     speed = newSpeed;
+        // } else {
+        //     i++;
+        // }
+        roller.setValue(speed);
+        feed.setValue(-speed);
         if (deploy){
             cylinder.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
         } else {
             cylinder.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
         }
-        i ++;
     }
 
     @Override
     public void inputUpdate(Input source) {
         if (source == intake){
             if (intake.getValue()){
-                i = 0;
+                // i = 0;
                 deploy = true;
                 speed = IN_SPEED;
             } else {
-                i = 25;
+                // i = 0;
                 deploy = false;
                 speed = 0;
             }
         } else if (source == outtake){
             if (outtake.getValue()){
-                i = 0;
+                // i = 0;
                 deploy = true;
                 speed = OUT_SPEED;
             } else {
-                i = 25;
+                // i = 25; // skip delay for turning off intake
                 deploy = false;
                 speed = 0;
             }
