@@ -10,8 +10,7 @@ import org.wildstang.framework.subsystems.swerve.SwerveDriveTemplate;
 import org.wildstang.year2023.robot.CANConstants;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
-import org.wildstang.year2023.robot.WSSubsystems;
-import org.wildstang.year2023.subsystems.targeting.AimHelper;
+// import org.wildstang.year2023.subsystems.targeting.AimHelper;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,10 +25,12 @@ public class SwerveDrive extends SwerveDriveTemplate {
     private AnalogInput leftStickX;//translation joystick x
     private AnalogInput leftStickY;//translation joystick y
     private AnalogInput rightStickX;//rot joystick
+    // private AnalogInput rightStickY;//rot joystick for steering wheel mode
     private AnalogInput rightTrigger;//thrust
     private AnalogInput leftTrigger;//aiming
     private DigitalInput rightBumper;//robot centric control
     private DigitalInput leftBumper;//intake
+    // private DigitalInput rightStick;//steering wheel mode
     private DigitalInput select;//gyro reset
     private DigitalInput start;//snake mode
     private DigitalInput faceUp;//rotation lock 0 degrees
@@ -89,6 +90,9 @@ public class SwerveDrive extends SwerveDriveTemplate {
         }
 
         //determine snake or pid locks
+        // if (Math.sqrt(Math.pow(rightStickX.getValue(), 2)+Math.pow(rightStickY.getValue(),2)) > 0.9){
+        //     rotTarget = swerveHelper.getDirection(rightStickX.getValue(), rightStickY.getValue());
+        // }
         if (start.getValue() && (Math.abs(xSpeed) > 0.1 || Math.abs(ySpeed) > 0.1)) {
             rotLocked = true;
             isSnake = true;
@@ -127,6 +131,12 @@ public class SwerveDrive extends SwerveDriveTemplate {
             rotLocked = false;
             rotTarget = 0.0;
         }
+        // switch between rotation speed control and steering wheel rotation control
+        // if (source == rightStick){
+        //     if (rightStick.getValue()){
+        //         rotLocked = !rotLocked;
+        //     }
+        // }
         
         //assign thrust
         thrustValue = 1 - DriveConstants.DRIVE_THRUST + DriveConstants.DRIVE_THRUST * Math.abs(rightTrigger.getValue());
@@ -151,6 +161,8 @@ public class SwerveDrive extends SwerveDriveTemplate {
         leftStickY.addInputListener(this);
         rightStickX = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_JOYSTICK_X);
         rightStickX.addInputListener(this);
+        // rightStickY = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_JOYSTICK_X);
+        // rightStickY.addInputListener(this);
         rightTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_TRIGGER);
         rightTrigger.addInputListener(this);
         leftTrigger = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_TRIGGER);
@@ -159,6 +171,8 @@ public class SwerveDrive extends SwerveDriveTemplate {
         rightBumper.addInputListener(this);
         leftBumper = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_SHOULDER);
         leftBumper.addInputListener(this);
+        // rightStick = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_JOYSTICK_BUTTON);
+        // rightBumper.addInputListener(this);
         select = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_SELECT);
         select.addInputListener(this);
         start = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_START);

@@ -26,7 +26,7 @@ private double rollerSpeed;
 private boolean deploy;
 private WsDoubleSolenoid gripper;
 
-private int i;
+private int i, j;
 
 private static final double IN_SPEED = 1.0;
 private static final double OUT_SPEED = -0.4;
@@ -90,44 +90,55 @@ private static final double HOLD_SPEED = 0.1;
 
         if (source == coneButton && coneButton.getValue()){
             deploy = false;
+            j = 25;
             rollerSpeed = IN_SPEED;
             i = 0;
         } else if (source == cubeButton && cubeButton.getValue()){
             deploy = true;
+            j = 25;
             rollerSpeed = OUT_SPEED;
             i = 0;
         } else if (source == intake) {
             if (intake.getValue()){
                 deploy = true;
+                j = 25;
                 rollerSpeed = 0.67;
             } else{
                 deploy = false;
+                j = 25;
             }
         } else if (source == outtake) {
             if (outtake.getValue()){
                 deploy = true;
+                j = 25;
                 rollerSpeed = -0.67;
             } else{
                 deploy = false;
+                j = 25;
             }
         } else if (source == stow && stow.getValue()){
             deploy = false;
+            j = 0;
         }
 
     }
     @Override
     public void update() {
 
-        if (i > 25){
+        if (i > 25){ // delay to allow tap to open or close cylinder
             roller.setValue(rollerSpeed);
         } else {
             roller.setValue(0);
             i ++;
         }
-        if (deploy){
-            gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
-        } else{
-            gripper.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+        if (j > 25){
+            if (deploy){
+                gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+            } else{
+                gripper.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+            }
+        } else {
+            j ++;
         }
     }
 

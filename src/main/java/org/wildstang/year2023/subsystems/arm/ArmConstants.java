@@ -24,7 +24,7 @@ public final class ArmConstants{
     public static final double HIGH_POS = .9;
     public static final double MID_POS = 1.1;
     public static final double LOW_POS = 2.8;
-    public static final double CONE_RIGHTING_POS = 2.45;
+    public static final double CONE_RIGHTING_POS = 2.35;
     public static final double SUBSTATION_POS = .98;
     public static final double STOW_POS = -OFFSET/RATIO*2*Math.PI; //-2.303 rad
 
