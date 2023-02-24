@@ -4,6 +4,7 @@ import org.wildstang.framework.auto.AutoStep;
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.PathFollowerStep;
 import org.wildstang.framework.core.Core;
+import org.wildstang.year2023.robot.WSSubsystems;
 import frc.paths.*;
 import org.wildstang.year2023.subsystems.Arm;
 import org.wildstang.year2023.subsystems.RollerClaw;
