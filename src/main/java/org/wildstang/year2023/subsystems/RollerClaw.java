@@ -151,6 +151,25 @@ private static final double HOLD_SPEED = 0.1;
     public void selfTest() {
     }
 
+    public void AutoScore(String mode) {
+
+        if (mode == "Cube High"){
+            roller.setValue(OUT_SPEED);
+        }
+
+        if (mode == "Cube Mid"){
+            gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+            roller.setValue(OUT_SPEED);
+        }
+        if (mode == "Cone Mid"){
+            gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+        }
+        if (mode == "Hybrid"){
+            gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+        }
+
+    }
+
     public void setGripper(boolean deploy){
         this.deploy = deploy;
     }
