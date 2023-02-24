@@ -86,6 +86,25 @@ private static final double speedConstant = 1;
 
     }
 
+    public void AutoScore(String mode) {
+
+        if (mode == "Cube High"){
+            roller.setValue(-speedConstant);
+        }
+
+        if (mode == "Cube Mid"){
+            solenoid.setValue(true);
+            roller.setValue(-speedConstant);
+        }
+        if (mode == "Cone Mid"){
+            solenoid.setValue(true);
+        }
+        if (mode == "Hybrid"){
+            solenoid.setValue(true);
+        }
+
+    }
+
     @Override
     public String getName() {
         return "Roller Claw";

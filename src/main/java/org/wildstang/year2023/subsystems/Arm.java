@@ -95,6 +95,22 @@ private static final double speedConstant = 1;
 
     }
 
+    public void AutoPosition(String height) {
+
+        if (height == "High") {
+            motor.setPosition(pos1);
+        }
+
+        if (height == "Mid") {
+            motor.setPosition(pos2);
+        }
+
+        if (height == "Low") {
+            motor.setPosition(pos3);
+        }
+
+    }
+
     @Override
     public String getName() {
         return "Arm";
