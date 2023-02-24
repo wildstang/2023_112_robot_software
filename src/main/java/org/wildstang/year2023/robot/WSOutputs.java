@@ -1,22 +1,17 @@
 package org.wildstang.year2023.robot;
 
-import javax.swing.plaf.TreeUI;
-
 // expand this and edit if trouble with Ws
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.core.Outputs;
 import org.wildstang.framework.hardware.OutputConfig;
 import org.wildstang.framework.io.outputs.Output;
 import org.wildstang.hardware.roborio.outputs.config.WsServoConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsPhoenixConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsRemoteAnalogOutputConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsI2COutputConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsMotorControllers;
 import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.roborio.outputs.config.WsDigitalOutputConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsDoubleSolenoidConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxFollowerConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSolenoidConfig;
 
 import edu.wpi.first.wpilibj.I2C;

@@ -29,7 +29,7 @@ public final class ArmConstants{
     public static final double STOW_POS = -OFFSET/RATIO*2*Math.PI; //-2.303 rad
 
     // Soft limits
-    public static final double SOFT_STOP_LOW = -2.263;
+    public static final double SOFT_STOP_LOW = -2.26;
     public static final double SOFT_STOP_HIGH = 2.65;
 
     public static final double MAX_VEL = 3.2;//5676 / RATIO *2*Math.PI/60.0 * (1-(ARM_TORQUE/STALL_TORQUE));  // max arm speed, 3.2 rad/s
@@ -38,6 +38,6 @@ public final class ArmConstants{
     public static final double kV = (5676 / RATIO *2*Math.PI/60.0) / 12;  // motor kV adjusted for units and gear ratio, (rad/s)/volt
     public static final double VEL_P = .005;
     
-    public static final double POS_DB = .05;  // position deadband, rad  starting value (ARM_TORQUE/STALL_TORQUE)/kP
+    public static final double POS_DB = .15;  // position deadband, rad  starting value (ARM_TORQUE/STALL_TORQUE)/kP
     public static final double VEL_DB = .1;  // output deadband, rad/s  starting value (ARM_TORQUE/STALL_TORQUE)/kV
 }

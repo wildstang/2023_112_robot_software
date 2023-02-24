@@ -12,8 +12,6 @@ import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-
 public class RollerClaw implements Subsystem {
     
 private WsSparkMax roller;
@@ -25,7 +23,6 @@ private WsJoystickButton intake;
 private WsJoystickButton outtake;
 private WsDPadButton stow;
 private double rollerSpeed;
-private double deadband;
 private boolean deploy;
 private WsDoubleSolenoid gripper;
 
@@ -33,7 +30,7 @@ private int i;
 
 private static final double IN_SPEED = 1.0;
 private static final double OUT_SPEED = -0.4;
-private static final double HOLD_SPEED = 0.2;
+private static final double HOLD_SPEED = 0.1;
 
     @Override
     public void init() {
@@ -65,7 +62,6 @@ private static final double HOLD_SPEED = 0.2;
     @Override
     public void resetState(){
         rollerSpeed = 0;
-        deadband = 0.05;
         deploy = false;
     }
 
@@ -89,7 +85,7 @@ private static final double HOLD_SPEED = 0.2;
         } else if(source == leftTrigger){
             rollerSpeed = -Math.abs(leftTrigger.getValue());
         } else{
-            rollerSpeed = 0;
+            rollerSpeed = HOLD_SPEED;
         }
 
         if (source == coneButton && coneButton.getValue()){
@@ -126,13 +122,13 @@ private static final double HOLD_SPEED = 0.2;
             roller.setValue(rollerSpeed);
         } else {
             roller.setValue(0);
+            i ++;
         }
         if (deploy){
             gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
         } else{
             gripper.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
         }
-        i ++;
     }
 
     @Override

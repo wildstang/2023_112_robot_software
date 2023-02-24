@@ -95,6 +95,10 @@ public class Arm implements Subsystem {
         curVel = -armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI/60;
         if(ctrlMode == mode.CLOSED_LOOP){
             setpoint += adj;
+            setpoint = Math.min(setpoint,ArmConstants.SOFT_STOP_HIGH);
+            setpoint = Math.max(setpoint,ArmConstants.SOFT_STOP_LOW);
+            goalPos = setpoint; //goalPos = getPositionTarget(curPos, curVel, goalVel);
+            curPosErr = goalPos-curPos;
             acc = getAccTarget(curVel, curPosErr);
             torque = ArmConstants.I * acc - Math.sin(curPos) * ArmConstants.ARM_TORQUE;
             ff = torque/ArmConstants.STALL_TORQUE + curVel/ArmConstants.MAX_VEL;
@@ -103,8 +107,6 @@ public class Arm implements Subsystem {
             curVelErr = goalVel - curVel;
             ff = -Math.sin(curPos) * ArmConstants.ARM_TORQUE/ArmConstants.STALL_TORQUE; //7.5 lbs 20.25in/ (3.5 Nm * 117.67) * sin(curPos)
             curOut = ff + goalVel * ArmConstants.kV + curVelErr * ArmConstants.VEL_P;
-            goalPos = setpoint; //goalPos = getPositionTarget(curPos, curVel, goalVel);
-            curPosErr = goalPos-curPos;
 
             // if ((curPosErr > 0 && curPos < 0) || (curPosErr < 0 && curPos > 0)){
             //     kP = ArmConstants.kP_UP;
