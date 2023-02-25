@@ -6,15 +6,12 @@ import org.wildstang.framework.core.Outputs;
 import org.wildstang.framework.hardware.OutputConfig;
 import org.wildstang.framework.io.outputs.Output;
 import org.wildstang.hardware.roborio.outputs.config.WsServoConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsPhoenixConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsRemoteAnalogOutputConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsI2COutputConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsMotorControllers;
 import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.roborio.outputs.config.WsDigitalOutputConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsDoubleSolenoidConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxConfig;
-import org.wildstang.hardware.roborio.outputs.config.WsSparkMaxFollowerConfig;
 import org.wildstang.hardware.roborio.outputs.config.WsSolenoidConfig;
 
 import edu.wpi.first.wpilibj.I2C;
@@ -33,7 +30,7 @@ public enum WSOutputs implements Outputs {
     // ---------------------------------
     // Motors
     // ---------------------------------
-    TEST_MOTOR("Test Motor", new WsPhoenixConfig(CANConstants.EXAMPLE_MOTOR_CONTROLLER, WsMotorControllers.VICTOR_SPX)),
+    // TEST_MOTOR("Test Motor", new WsPhoenixConfig(CANConstants.EXAMPLE_MOTOR_CONTROLLER, WsMotorControllers.VICTOR_SPX)),
 
     DRIVE1("Module 1 Drive Motor", new WsSparkMaxConfig(CANConstants.DRIVE1, true)),
     ANGLE1("Module 1 Angle Motor", new WsSparkMaxConfig(CANConstants.ANGLE1, true)),
@@ -44,9 +41,13 @@ public enum WSOutputs implements Outputs {
     DRIVE4("Module 4 Drive Motor", new WsSparkMaxConfig(CANConstants.DRIVE4, true)),
     ANGLE4("Module 4 Angle Motor", new WsSparkMaxConfig(CANConstants.ANGLE4, true)),
 
-    ARM("Arm Motor", new WsSparkMaxConfig(CANConstants.ARM, true)),
     CLAW("Roller Motor", new WsSparkMaxConfig(CANConstants.CLAW, true)),
 
+    INTAKE_MOTOR("Intake Roller Motor", new WsSparkMaxConfig(CANConstants.INTAKE, true)),
+
+    ARM("4-bar arm motor", new WsSparkMaxConfig(CANConstants.ARM, true)),
+
+    FEED("Feed system motor", new WsSparkMaxConfig(CANConstants.FEED, true)),
     
 
     // ---------------------------------
@@ -63,7 +64,8 @@ public enum WSOutputs implements Outputs {
     // Solenoids
     // ********************************
     TEST_SOLENOID("Test Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
-    CLAW_SOLENOID("Claw Piston Solenoid", new WsSolenoidConfig(PneumaticsModuleType.REVPH, 0, false)),
+    GRIPPER_SOLENOID("Gripper Solenoid", new WsDoubleSolenoidConfig(PneumaticsModuleType.REVPH,7,5,WsDoubleSolenoidState.FORWARD)),
+    INTAKE_SOLENOID("Intake Solenoid", new WsDoubleSolenoidConfig(PneumaticsModuleType.REVPH, 6, 4, WsDoubleSolenoidState.REVERSE)),
     
     // ********************************
     // Relays

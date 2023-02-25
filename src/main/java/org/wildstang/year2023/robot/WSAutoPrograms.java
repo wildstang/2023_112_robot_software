@@ -1,7 +1,6 @@
 package org.wildstang.year2023.robot;
 
 import org.wildstang.framework.core.AutoPrograms;
-import org.wildstang.year2023.auto.SampleAutoProgram;
 
 /**
  * All active AutoPrograms are enumerated here.
@@ -10,7 +9,7 @@ import org.wildstang.year2023.auto.SampleAutoProgram;
 public enum WSAutoPrograms implements AutoPrograms {
 
     // enumerate programs
-    TEST_PROGRAM("Sample", SampleAutoProgram.class)
+    // TEST_PROGRAM("Sample", SampleAutoProgram.class),
     ;
 
     /**
