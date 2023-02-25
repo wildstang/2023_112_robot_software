@@ -1,4 +1,4 @@
-package org.wildstang.year2023.auto;
+package org.wildstang.year2023.auto.steps;
 
 import org.wildstang.framework.auto.AutoStep;
 import org.wildstang.framework.auto.AutoProgram;

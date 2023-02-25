@@ -89,18 +89,22 @@ private static final double speedConstant = 1;
     public void AutoScore(String mode) {
 
         if (mode == "Cube High"){
-            roller.setValue(-speedConstant);
+            rollerSpeed = -speedConstant;
         }
 
-        if (mode == "Cube Mid"){
-            solenoid.setValue(true);
-            roller.setValue(-speedConstant);
+        else if (mode == "Cube Mid"){
+            piston = true;
+            rollerSpeed = -speedConstant;
         }
-        if (mode == "Cone Mid"){
-            solenoid.setValue(true);
+        else if (mode == "Cone Mid"){
+            piston = true;
         }
-        if (mode == "Hybrid"){
-            solenoid.setValue(true);
+        else if (mode == "Hybrid"){
+            piston = true;
+        }
+        else if (mode == "Hold"){
+            piston = false;
+            rollerSpeed = speedConstant;
         }
 
     }
