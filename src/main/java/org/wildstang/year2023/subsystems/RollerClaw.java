@@ -171,6 +171,7 @@ private static final double HOLD_SPEED = 0.1;
         }
         else if (mode == "Hold"){
             deploy = false;
+            rollerSpeed = IN_SPEED;
         }
 
     }
