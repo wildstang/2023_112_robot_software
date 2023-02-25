@@ -271,15 +271,19 @@ public class Arm implements Subsystem {
     public void AutoPosition(String height) {
 
         if (height == "High") {
-            armMotor.setPosition(ArmConstants.HIGH_POS);
+            setpoint = ArmConstants.HIGH_POS;
         }
 
-        if (height == "Mid") {
-            armMotor.setPosition(ArmConstants.MID_POS);
+        else if (height == "Mid") {
+            setpoint = ArmConstants.MID_POS;
         }
 
-        if (height == "Low") {
-            armMotor.setPosition(ArmConstants.LOW_POS);
+        else if (height == "Low") {
+            setpoint = ArmConstants.LOW_POS;
+        }
+
+        else if (height == "Stow") {
+            setpoint = ArmConstants.STOW_POS;
         }
 
     }

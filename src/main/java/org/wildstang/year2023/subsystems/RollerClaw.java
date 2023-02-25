@@ -26,7 +26,7 @@ private double rollerSpeed;
 private boolean deploy;
 private WsDoubleSolenoid gripper;
 
-private static final double autoSpeed;
+private static final double autoSpeed = 1;
 
 private int i, j;
 
@@ -145,29 +145,6 @@ private static final double HOLD_SPEED = 0.1;
 
     }
 
-    public void AutoScore(String mode) {
-
-        if (mode == "Cube High"){
-            rollerSpeed = -autoSpeed;
-        }
-
-        else if (mode == "Cube Mid"){
-            deploy = true;
-            rollerSpeed = -autoSpeed;
-        }
-        else if (mode == "Cone Mid"){
-            deploy = true;
-        }
-        else if (mode == "Hybrid"){
-            deploy = true;
-        }
-        else if (mode == "Hold"){
-            deploy = false;
-            rollerSpeed = autoSpeed;
-        }
-
-    }
-
     @Override
     public String getName() {
         return "Roller Claw";
@@ -180,18 +157,20 @@ private static final double HOLD_SPEED = 0.1;
     public void AutoScore(String mode) {
 
         if (mode == "Cube High"){
-            roller.setValue(OUT_SPEED);
+            rollerSpeed = OUT_SPEED;
         }
-
-        if (mode == "Cube Mid"){
-            gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
-            roller.setValue(OUT_SPEED);
+        else if (mode == "Cube Mid"){
+            deploy = true;
+            rollerSpeed = OUT_SPEED;
         }
-        if (mode == "Cone Mid"){
-            gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+        else if (mode == "Cone Mid"){
+            deploy = true;
         }
-        if (mode == "Hybrid"){
-            gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+        else if (mode == "Hybrid"){
+            deploy = true;
+        }
+        else if (mode == "Hold"){
+            deploy = false;
         }
 
     }

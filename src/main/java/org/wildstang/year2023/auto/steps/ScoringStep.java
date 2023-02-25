@@ -31,8 +31,11 @@ private RollerClaw RollerClaw;
     @Override
     public void update(){
         Arm.AutoPosition(armHeight);
-        RollerClaw.AutoScore(scoringMode);
-    }
+        if (Arm.isAtTarget()){
+            RollerClaw.AutoScore(scoringMode);
+        }
+        this.setFinished();
+    }   
 
     @Override
     public String toString() {
