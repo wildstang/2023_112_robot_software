@@ -78,6 +78,11 @@ public class CubeIntake implements Subsystem {
                 speed = 0;
             }
         }
+    }    
+    
+    public void AutoIntake(){
+        speed = IN_SPEED;
+        deploy = true;
     }
 
     @Override
@@ -96,4 +101,5 @@ public class CubeIntake implements Subsystem {
     public void setSpeed(double speed){
         this.speed = speed;
     }
+
 }
