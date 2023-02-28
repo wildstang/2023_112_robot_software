@@ -13,17 +13,15 @@ import org.wildstang.year2023.subsystems.CubeIntake;
 
 public class PickupStep extends AutoStep {
 
-private String armHeight;
-private String scoringMode;
-private boolean intakeDeploy;
+private boolean isStow;
 private String objectType;
-private double intakeSpeed;
 private Arm Arm;
 private RollerClaw RollerClaw;
 private CubeIntake CubeIntake;
     
-    public PickupStep(String type){
+    public PickupStep(String type, boolean stow){
         this.objectType = type;
+        this.isStow = stow;
     }
 
     @Override 
@@ -37,12 +35,25 @@ private CubeIntake CubeIntake;
     public void update(){
 
         if(objectType == "Cube"){
-            CubeIntake.AutoIntake();
+
+            if(isStow == false){
+                CubeIntake.AutoIntake(true);
+            }
+            else if(isStow == true){
+                CubeIntake.AutoIntake(false);
+            }
+
         }
         else if (objectType == "Cone"){
-            Arm.AutoPosition("Low");
-            if(Arm.isAtTarget()){
-                RollerClaw.AutoScore("Hold");
+            
+            if(isStow == false){
+                Arm.AutoPosition("Low");
+                if(Arm.isAtTarget()){
+                    RollerClaw.AutoScore("Hold");
+                }
+            }
+            else if (isStow == true){
+                Arm.AutoPosition("Stow");
             }
         }
         this.setFinished();

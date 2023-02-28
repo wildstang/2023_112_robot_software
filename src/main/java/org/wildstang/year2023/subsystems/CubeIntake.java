@@ -80,9 +80,15 @@ public class CubeIntake implements Subsystem {
         }
     }    
     
-    public void AutoIntake(){
-        speed = IN_SPEED;
-        deploy = true;
+    public void AutoIntake(boolean open){
+        if(open == true){
+            speed = IN_SPEED;
+            deploy = true;
+        }
+        else if(open == false){
+            speed = 0;
+            deploy = false;
+        }
     }
 
     @Override
