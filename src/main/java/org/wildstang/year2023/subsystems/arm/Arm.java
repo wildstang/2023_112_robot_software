@@ -242,6 +242,26 @@ public class Arm implements Subsystem {
         this.setpoint = target;
     }
 
+    public void AutoPosition(String height) {
+
+        if (height == "High") {
+            setpoint = ArmConstants.HIGH_POS;
+        }
+
+        else if (height == "Mid") {
+            setpoint = ArmConstants.MID_POS;
+        }
+
+        else if (height == "Low") {
+            setpoint = ArmConstants.LOW_POS;
+        }
+
+        else if (height == "Stow") {
+            setpoint = ArmConstants.STOW_POS;
+        }
+
+    }
+
     public boolean isAtTarget() {
         return Math.abs(curPosErr) < ArmConstants.POS_DB && Math.abs(curVel) < ArmConstants.VEL_DB;
     }

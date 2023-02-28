@@ -15,11 +15,10 @@ public enum WSSubsystems implements Subsystems {
 
     // enumerate subsystems
     SWERVE_DRIVE("Swerve Drive", SwerveDrive.class),
+    ARM("Arm", Arm.class),
     ROLLER_CLAW("Roller Claw", RollerClaw.class),
     CUBE_INTAKE("Cube Intake", CubeIntake.class),
-    ARM("chainbar arm", Arm.class)
     //AIM_HELPER("Aim Helper", AimHelper.class),
-    //SAMPLE("Sample", SampleSubsystem.class)
     ;
 
     /**
