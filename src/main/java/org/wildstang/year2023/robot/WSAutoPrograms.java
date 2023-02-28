@@ -1,7 +1,6 @@
 package org.wildstang.year2023.robot;
 
 import org.wildstang.framework.core.AutoPrograms;
-import org.wildstang.year2023.auto.ConeCubeAuto;
 import org.wildstang.year2023.auto.SampleAutoProgram;
 
 /**
@@ -11,8 +10,7 @@ import org.wildstang.year2023.auto.SampleAutoProgram;
 public enum WSAutoPrograms implements AutoPrograms {
 
     // enumerate programs
-    TEST_PROGRAM("Sample", SampleAutoProgram.class),
-    CONE_CUBE_AUTO("One Cone One Cube", ConeCubeAuto.class)
+    TEST_PROGRAM("Sample", SampleAutoProgram.class)
     ;
 
     /**
