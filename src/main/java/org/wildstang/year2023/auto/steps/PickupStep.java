@@ -54,9 +54,12 @@ private CubeIntake CubeIntake;
             }
             else if (isStow == true){
                 Arm.AutoPosition("Stow");
+                
             }
         }
-        this.setFinished();
+        if(Arm.isAtTarget()){
+            this.setFinished();
+        }
 
     }
 
