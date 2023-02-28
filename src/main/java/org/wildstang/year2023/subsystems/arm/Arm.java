@@ -77,73 +77,47 @@ public class Arm implements Subsystem {
     public void resetState() {
         speed = 0;
         integral = 0;
-        curPos = -(armMotor.getPosition()+ArmConstants.OFFSET)/ArmConstants.RATIO*2*Math.PI;
+        curPos =  -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
         curVel = armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI/60;
         goalPos = curPos;
         setpoint = curPos;
         goalVel = 0;
         adj = 0;
         ctrlMode = mode.CLOSED_LOOP;
-        SmartDashboard.putNumber("kP_DOWN", 0.2);
-        SmartDashboard.putNumber("kD_DOWN", 0);
 
     }
 
     @Override
     public void update() {
-        curPos = -(armMotor.getPosition()+ArmConstants.OFFSET)/ArmConstants.RATIO*2*Math.PI;
+        curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
         curVel = -armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI/60;
         if(ctrlMode == mode.CLOSED_LOOP){
             setpoint += adj;
-            setpoint = Math.min(setpoint,ArmConstants.SOFT_STOP_HIGH);
-            setpoint = Math.max(setpoint,ArmConstants.SOFT_STOP_LOW);
+            setpoint = Math.min(setpoint,ArmConstants.SOFT_STOP_HIGH);  // don't command a position higher than the soft stop
+            setpoint = Math.max(setpoint,ArmConstants.SOFT_STOP_LOW);  // don't command a position lower than the soft stop
             goalPos = setpoint; //goalPos = getPositionTarget(curPos, curVel, goalVel);
             curPosErr = goalPos-curPos;
-            acc = getAccTarget(curVel, curPosErr);
-            torque = ArmConstants.I * acc - Math.sin(curPos) * ArmConstants.ARM_TORQUE;
-            ff = torque/ArmConstants.STALL_TORQUE + curVel/ArmConstants.MAX_VEL;
-            curOut = ff; //+ curPosErr * ArmConstants.kP_UP + curVelErr * ArmConstants.VEL_P;
+
+            // TODO: test below code in place of current code
+            // acc = getAccTarget(curVel, curPosErr);
+            // torque = ArmConstants.I * acc - Math.sin(curPos) * ArmConstants.ARM_TORQUE;
+            // ff = torque/ArmConstants.STALL_TORQUE - curVel/ArmConstants.MAX_VEL;
+            // curOut = ff; //+ curPosErr * ArmConstants.kP_UP + curVelErr * ArmConstants.VEL_P;
+
             goalVel = getVelocityTarget(goalVel, curPosErr);
             curVelErr = goalVel - curVel;
             ff = -Math.sin(curPos) * ArmConstants.ARM_TORQUE/ArmConstants.STALL_TORQUE; //7.5 lbs 20.25in/ (3.5 Nm * 117.67) * sin(curPos)
             curOut = ff + goalVel * ArmConstants.kV + curVelErr * ArmConstants.VEL_P;
 
-            // if ((curPosErr > 0 && curPos < 0) || (curPosErr < 0 && curPos > 0)){
-            //     kP = ArmConstants.kP_UP;
-            //     kI = ArmConstants.kI_UP;
-            //     kD = ArmConstants.kD_UP;
-            //     SmartDashboard.putBoolean("arm state", false);
-            // }else{
-            //     kP = ArmConstants.kP_DOWN;
-            //     kI = ArmConstants.kI_DOWN;
-            //     kD = ArmConstants.kD_DOWN;
-            //     SmartDashboard.putBoolean("arm state", true);
-            // }
-            // prop = curPosErr * kP;
-            // if (Math.abs(curPosErr) < .8){integral += curPosErr*kI;}
-            
-            // if (integral>1){
-            //     integral = 1;
-            // } else if (integral<-1){
-            //     integral = -1;
-            // }
-            // der = (curPosErr - prevPosErr) * kD;
-            // curOut = prop+integral+der+ff;
-            // if (Math.abs(curOut - prevOut) > ArmConstants.RAMP_LIMIT){
-            //     curOut = prevOut + Math.signum(curOut - prevOut) * ArmConstants.RAMP_LIMIT;
-            // }
-
-            // set output to zero if we are near the goal and not moving. This ensures that the motor
-            // controller actually enters brake mode
             // TODO: also need to either zero out or pause integral term
-            if(Math.abs(curPosErr)<ArmConstants.POS_DB && Math.abs(curVel) < ArmConstants.VEL_DB){
+            if(isAtTarget()){
                 curOut = ff;
             }
         } else if (ctrlMode == mode.OPEN_LOOP) {
             curOut = -speed;
         }
         
-        // Impose soft stop restrictions to avoid overdriving arm
+        // Impose soft stop restrictions to avoid driving arm into hardstops
         if (curPos <= ArmConstants.SOFT_STOP_LOW){
             curOut = Math.max(0, curOut);
         } else if (curPos > ArmConstants.SOFT_STOP_HIGH){
@@ -269,6 +243,6 @@ public class Arm implements Subsystem {
     }
 
     public boolean isAtTarget() {
-        return curPosErr < ArmConstants.POS_DB && curVel < ArmConstants.VEL_DB;
+        return Math.abs(curPosErr) < ArmConstants.POS_DB && Math.abs(curVel) < ArmConstants.VEL_DB;
     }
 }
