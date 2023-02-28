@@ -32,7 +32,7 @@ private int i, j;
 
 private static final double IN_SPEED = 1.0;
 private static final double OUT_SPEED = -0.4;
-private static final double HOLD_SPEED = 0.1;
+private static final double HOLD_SPEED = 0.05;
 
     @Override
     public void init() {
@@ -133,7 +133,7 @@ private static final double HOLD_SPEED = 0.1;
             roller.setValue(0);
             i ++;
         }
-        if (j > 25){
+        if (j > 25){  // delay closing gripper when going to stow
             if (deploy){
                 gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
             } else{
