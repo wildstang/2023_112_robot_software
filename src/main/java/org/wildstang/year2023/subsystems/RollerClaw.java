@@ -26,6 +26,8 @@ private double rollerSpeed;
 private boolean deploy;
 private WsDoubleSolenoid gripper;
 
+private static final double autoSpeed = 1;
+
 private int i, j;
 
 private static final double IN_SPEED = 1.0;
@@ -140,6 +142,7 @@ private static final double HOLD_SPEED = 0.05;
         } else {
             j ++;
         }
+
     }
 
     @Override
@@ -149,6 +152,28 @@ private static final double HOLD_SPEED = 0.05;
 
     @Override
     public void selfTest() {
+    }
+
+    public void AutoScore(String mode) {
+
+        if (mode == "Cube High"){
+            rollerSpeed = OUT_SPEED;
+        }
+        else if (mode == "Cube Mid"){
+            deploy = true;
+            rollerSpeed = OUT_SPEED;
+        }
+        else if (mode == "Cone Mid"){
+            deploy = true;
+        }
+        else if (mode == "Hybrid"){
+            deploy = true;
+        }
+        else if (mode == "Hold"){
+            deploy = false;
+            rollerSpeed = IN_SPEED;
+        }
+
     }
 
     public void setGripper(boolean deploy){
