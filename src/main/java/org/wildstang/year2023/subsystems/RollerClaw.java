@@ -11,6 +11,8 @@ import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
+import org.wildstang.year2023.robot.WSSubsystems;
+import org.wildstang.year2023.subsystems.arm.Arm;
 
 public class RollerClaw implements Subsystem {
     
@@ -25,6 +27,8 @@ private WsDPadButton stow;
 private double rollerSpeed;
 private boolean deploy;
 private WsDoubleSolenoid gripper;
+private boolean reclamp;
+private Arm arm;
 
 private int i, j;
 
@@ -37,6 +41,7 @@ private static final double HOLD_SPEED = 0.05;
 
         roller = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLAW);
         gripper = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.GRIPPER_SOLENOID);
+        arm = (Arm) Core.getSubsystemManager().getSubsystem(WSSubsystems.ARM);
         initInputs();
 
     }
@@ -119,6 +124,7 @@ private static final double HOLD_SPEED = 0.05;
         } else if (source == stow && stow.getValue()){
             deploy = false;
             j = 0;
+            reclamp = true;
         }
 
     }
@@ -131,6 +137,14 @@ private static final double HOLD_SPEED = 0.05;
             roller.setValue(0);
             i ++;
         }
+
+        if(reclamp && arm.isAtTarget()){
+            reclamp = false;
+            gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+            j = 7;
+            deploy = false;
+        }
+
         if (j > 25){  // delay closing gripper when going to stow
             if (deploy){
                 gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
