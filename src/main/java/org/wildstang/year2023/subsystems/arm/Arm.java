@@ -41,8 +41,10 @@ public class Arm implements Subsystem {
 
     double acc, torque;
 
-    private enum mode {CLOSED_LOOP, OPEN_LOOP};
-    private mode ctrlMode;
+    public enum HEIGHT {LOW, MID, HIGH, STOW};
+
+    private enum MODE {CLOSED_LOOP, OPEN_LOOP};
+    private MODE ctrlMode;
 
 
     @Override
@@ -83,7 +85,7 @@ public class Arm implements Subsystem {
         setpoint = curPos;
         goalVel = 0;
         adj = 0;
-        ctrlMode = mode.CLOSED_LOOP;
+        ctrlMode = MODE.CLOSED_LOOP;
 
     }
 
@@ -91,7 +93,7 @@ public class Arm implements Subsystem {
     public void update() {
         curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
         curVel = -armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI/60;
-        if(ctrlMode == mode.CLOSED_LOOP){
+        if(ctrlMode == MODE.CLOSED_LOOP){
             setpoint += adj;
             setpoint = Math.min(setpoint,ArmConstants.SOFT_STOP_HIGH);  // don't command a position higher than the soft stop
             setpoint = Math.max(setpoint,ArmConstants.SOFT_STOP_LOW);  // don't command a position lower than the soft stop
@@ -113,7 +115,7 @@ public class Arm implements Subsystem {
             if(isAtTarget()){
                 curOut = ff;
             }
-        } else if (ctrlMode == mode.OPEN_LOOP) {
+        } else if (ctrlMode == MODE.OPEN_LOOP) {
             curOut = -speed;
         }
         
@@ -154,16 +156,16 @@ public class Arm implements Subsystem {
         }
 
         if (source == modeSwitch && modeSwitch.getValue()){
-            if (ctrlMode == mode.CLOSED_LOOP){
-                ctrlMode = mode.OPEN_LOOP;
+            if (ctrlMode == MODE.CLOSED_LOOP){
+                ctrlMode = MODE.OPEN_LOOP;
             } else{
-                ctrlMode = mode.CLOSED_LOOP;
+                ctrlMode = MODE.CLOSED_LOOP;
                 setpoint = curPos;
             }
         }
 
         if(source == joystick){
-            if (ctrlMode == mode.CLOSED_LOOP){
+            if (ctrlMode == MODE.CLOSED_LOOP){
                 if (Math.abs(joystick.getValue()) > 0.1){
                     adj = -joystick.getValue() * .01;
                 } else {
@@ -242,21 +244,21 @@ public class Arm implements Subsystem {
         this.setpoint = target;
     }
 
-    public void AutoPosition(String height) {
+    public void autoPosition(HEIGHT height) {
 
-        if (height == "High") {
+        if (height == HEIGHT.HIGH) {
             setpoint = ArmConstants.HIGH_POS;
         }
 
-        else if (height == "Mid") {
+        else if (height == HEIGHT.MID) {
             setpoint = ArmConstants.MID_POS;
         }
 
-        else if (height == "Low") {
+        else if (height == HEIGHT.LOW) {
             setpoint = ArmConstants.LOW_POS;
         }
 
-        else if (height == "Stow") {
+        else if (height == HEIGHT.STOW) {
             setpoint = ArmConstants.STOW_POS;
         }
 

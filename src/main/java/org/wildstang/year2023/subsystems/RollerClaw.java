@@ -26,8 +26,6 @@ private double rollerSpeed;
 private boolean deploy;
 private WsDoubleSolenoid gripper;
 
-private static final double autoSpeed = 1;
-
 private int i, j;
 
 private static final double IN_SPEED = 1.0;
@@ -154,7 +152,7 @@ private static final double HOLD_SPEED = 0.05;
     public void selfTest() {
     }
 
-    public void AutoScore(String mode) {
+    public void autoScore(String mode) {
 
         if (mode == "Cube High"){
             rollerSpeed = OUT_SPEED;
