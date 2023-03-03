@@ -27,7 +27,7 @@ public final class DriveConstants {
     /**factor of thrust for the drive trigger */
     public static final double DRIVE_THRUST = 0.4;
     /**derate factor for the left trigger */
-    public static final double DRIVE_DERATE = 1;
+    public static final double DRIVE_DERATE = 2;
     /**slew rate limiter rates of limit for the drive
     *  value is max change per second
     *  i.e. 2.0 means it can go from 0 to 1.0 in 0.5 seconds

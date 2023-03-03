@@ -28,7 +28,6 @@ private double rollerSpeed;
 private boolean deploy;
 private WsDoubleSolenoid gripper;
 private boolean reclamp;
-private Arm arm;
 
 private int i, j;
 
@@ -41,7 +40,6 @@ private static final double HOLD_SPEED = 0.05;
 
         roller = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLAW);
         gripper = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.GRIPPER_SOLENOID);
-        arm = (Arm) Core.getSubsystemManager().getSubsystem(WSSubsystems.ARM);
         initInputs();
 
     }
@@ -126,12 +124,13 @@ private static final double HOLD_SPEED = 0.05;
             i ++;
         }
 
-        if(reclamp && arm.isAtTarget()){
-            reclamp = false;
-            gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
-            j = 18;
-            deploy = false;
-        }
+        // if(reclamp && ((Arm) Core.getSubsystemManager().getSubsystem(WSSubsystems.ARM)).isAtTarget()){
+            
+        //     reclamp = false;
+        //     gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+        //     j = 18;
+        //     deploy = false;
+        // }
 
         if (j <= 0){  // delay closing gripper when going to stow
             if (deploy){
