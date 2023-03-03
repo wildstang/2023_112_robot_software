@@ -63,7 +63,7 @@ private CubeIntake cubeIntake;
 
     @Override
     public String toString() {
-        return "Pickup Step";
+        return "PickupStep";
     }
 
 }

@@ -93,7 +93,7 @@ public class CubeIntake implements Subsystem {
 
     @Override
     public String getName() {
-        return "Sample";
+        return "CubeIntake";
     }
 
     @Override

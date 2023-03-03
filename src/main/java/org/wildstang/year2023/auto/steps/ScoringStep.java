@@ -37,7 +37,7 @@ private RollerClaw rollerClaw;
 
     @Override
     public String toString() {
-        return "Scoring Step";
+        return "ScoringStep";
     }
 
 

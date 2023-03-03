@@ -181,7 +181,7 @@ public class Arm implements Subsystem {
 
     @Override
     public String getName() {
-        return "Sample";
+        return "Arm";
     }
 
     @Override

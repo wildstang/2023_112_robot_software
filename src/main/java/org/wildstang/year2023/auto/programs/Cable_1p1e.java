@@ -1,5 +1,7 @@
 package org.wildstang.year2023.auto.programs;
 
+import java.util.List;
+
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.AutoParallelStepGroup;
 import org.wildstang.framework.auto.steps.AutoSerialStepGroup;
@@ -14,8 +16,9 @@ import org.wildstang.year2023.subsystems.swerve.SwerveDrive;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 
-public class Cable_1p1 extends AutoProgram{
+public class Cable_1p1e extends AutoProgram{
 
     private boolean color = false;
 
@@ -23,12 +26,14 @@ public class Cable_1p1 extends AutoProgram{
     protected void defineSteps() {
         SwerveDrive swerve = (SwerveDrive) Core.getSubsystemManager().getSubsystem(WSSubsystems.SWERVE_DRIVE);
 
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Cable_1p1e", new PathConstraints(4.0, 3.0));
+
         //score preload
         addStep(new ScoringStep(HEIGHT.MID, "Cone Mid"));
 
         //drive to pickup, move arm to stow, and after 2 seconds deploy cube intake
         AutoParallelStepGroup group1 = new AutoParallelStepGroup();
-        group1.addStep(new SwervePathFollowerStep(PathPlanner.loadPath("Cable_1p1", new PathConstraints(4.0, 3.0)), swerve, color));
+        group1.addStep(new SwervePathFollowerStep(pathGroup.get(0), swerve, color));
         AutoSerialStepGroup subgroup1_1 = new AutoSerialStepGroup();
         AutoParallelStepGroup subsubgroup1_1_1 = new AutoParallelStepGroup();
         subsubgroup1_1_1.addStep(new ScoringStep(HEIGHT.STOW, "Hold")); // move arm to stow
@@ -38,12 +43,17 @@ public class Cable_1p1 extends AutoProgram{
         group1.addStep(subgroup1_1);
         addStep(group1);
         
-        addStep(new PickupStep("Cube", true));
+        //stow intake and drive onto charge station
+        AutoParallelStepGroup group2 = new AutoParallelStepGroup();
+        group2.addStep(new SwervePathFollowerStep(pathGroup.get(1), swerve, color));
+        group2.addStep(new PickupStep("Cube", true)); // stow intake
+        addStep(group2);
+
     }
 
     @Override
     public String toString() {
-        return "Cable_1p1";
+        return "Cable_1p1e";
     }
     
 }

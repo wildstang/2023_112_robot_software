@@ -145,7 +145,7 @@ private static final double HOLD_SPEED = 0.05;
 
     @Override
     public String getName() {
-        return "Roller Claw";
+        return "RollerClaw";
     }
 
     @Override
