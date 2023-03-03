@@ -11,6 +11,8 @@ import org.wildstang.hardware.roborio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
+import org.wildstang.year2023.robot.WSSubsystems;
+import org.wildstang.year2023.subsystems.arm.Arm;
 
 public class RollerClaw implements Subsystem {
     
@@ -25,6 +27,7 @@ private WsDPadButton stow;
 private double rollerSpeed;
 private boolean deploy;
 private WsDoubleSolenoid gripper;
+private boolean reclamp;
 
 private int i, j;
 
@@ -68,18 +71,6 @@ private static final double HOLD_SPEED = 0.05;
     @Override
     public void inputUpdate(Input source) {
 
-        // if (forwardButton.getValue()){
-        //     rollerSpeed = speedConstant;
-        // }
-
-        // else if (backwardButton.getValue()){
-        //     rollerSpeed = -speedConstant;
-        // }
-
-        // else {
-        //     rollerSpeed = 0;
-        // }
-
         if (source == rightTrigger){
             rollerSpeed = Math.abs(rightTrigger.getValue());
         } else if(source == leftTrigger){
@@ -90,35 +81,36 @@ private static final double HOLD_SPEED = 0.05;
 
         if (source == coneButton && coneButton.getValue()){
             deploy = false;
-            j = 25;
+            j = -1;
             rollerSpeed = IN_SPEED;
             i = 0;
         } else if (source == cubeButton && cubeButton.getValue()){
             deploy = true;
-            j = 25;
+            j = -1;
             rollerSpeed = OUT_SPEED;
             i = 0;
         } else if (source == intake) {
             if (intake.getValue()){
                 deploy = true;
-                j = 25;
+                j = -1;
                 rollerSpeed = 0.67;
             } else{
                 deploy = false;
-                j = 25;
+                j = -1;
             }
         } else if (source == outtake) {
             if (outtake.getValue()){
                 deploy = true;
-                j = 25;
+                j = -1;
                 rollerSpeed = -0.67;
             } else{
                 deploy = false;
-                j = 25;
+                j = -1;
             }
         } else if (source == stow && stow.getValue()){
             deploy = false;
-            j = 0;
+            j = 25;
+            reclamp = true;
         }
 
     }
@@ -131,14 +123,23 @@ private static final double HOLD_SPEED = 0.05;
             roller.setValue(0);
             i ++;
         }
-        if (j > 25){  // delay closing gripper when going to stow
+
+        // if(reclamp && ((Arm) Core.getSubsystemManager().getSubsystem(WSSubsystems.ARM)).isAtTarget()){
+            
+        //     reclamp = false;
+        //     gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+        //     j = 18;
+        //     deploy = false;
+        // }
+
+        if (j <= 0){  // delay closing gripper when going to stow
             if (deploy){
                 gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
             } else{
                 gripper.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
             }
         } else {
-            j ++;
+            j --;
         }
     }
 

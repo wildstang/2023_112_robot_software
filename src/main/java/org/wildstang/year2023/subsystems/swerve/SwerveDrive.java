@@ -27,7 +27,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
     private AnalogInput rightStickX;//rot joystick
     // private AnalogInput rightStickY;//rot joystick for steering wheel mode
     private AnalogInput rightTrigger;//thrust
-    private AnalogInput leftTrigger;//aiming
+    private AnalogInput leftTrigger;//derate
     private DigitalInput rightBumper;//robot centric control
     private DigitalInput leftBumper;//intake
     // private DigitalInput rightStick;//steering wheel mode
@@ -43,6 +43,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
     private double ySpeed;
     private double rotSpeed;
     private double thrustValue;
+    private double derateValue;
     private boolean rotLocked;
     private boolean isSnake;
     private boolean isFieldCentric;
@@ -140,8 +141,9 @@ public class SwerveDrive extends SwerveDriveTemplate {
         
         //assign thrust
         thrustValue = 1 - DriveConstants.DRIVE_THRUST + DriveConstants.DRIVE_THRUST * Math.abs(rightTrigger.getValue());
-        xSpeed *= thrustValue;
-        ySpeed *= thrustValue;
+        derateValue = (DriveConstants.DRIVE_DERATE * Math.abs(leftTrigger.getValue()) + 1);
+        xSpeed *= thrustValue/derateValue;
+        ySpeed *= thrustValue/derateValue;
         rotSpeed *= thrustValue;
         
     }
