@@ -4,8 +4,9 @@ import org.wildstang.framework.core.Subsystems;
 import org.wildstang.year2023.subsystems.swerve.SwerveDrive;
 import org.wildstang.year2023.subsystems.RollerClaw;
 import org.wildstang.year2023.subsystems.arm.Arm;
-import org.wildstang.year2023.subsystems.targeting.AimHelper;
+// import org.wildstang.year2023.subsystems.targeting.AimHelper;
 import org.wildstang.year2023.subsystems.CubeIntake;
+import org.wildstang.year2023.subsystems.LedController;
 
 /**
  * All subsystems are enumerated here.
@@ -18,6 +19,7 @@ public enum WSSubsystems implements Subsystems {
     ARM("Arm", Arm.class),
     ROLLER_CLAW("Roller Claw", RollerClaw.class),
     CUBE_INTAKE("Cube Intake", CubeIntake.class),
+    LED("leds", LedController.class)
     //AIM_HELPER("Aim Helper", AimHelper.class),
     ;
 
