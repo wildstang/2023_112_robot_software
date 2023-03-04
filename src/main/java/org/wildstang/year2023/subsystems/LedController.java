@@ -19,7 +19,7 @@ public class LedController implements Subsystem{
     private AddressableLEDBuffer ledBuffer;
 
     private int port = 9;//port
-    private int length = 60;//length
+    private int length = 45;//length
     private int initialHue = 0;
     private boolean isRainbow = true;
     private int speed = 1;
@@ -94,14 +94,14 @@ public class LedController implements Subsystem{
 
     private void rainbow(){
         for (int i = 0; i < ledBuffer.getLength(); i++){
-            ledBuffer.setRGB(i, (initialHue + (i*255/ledBuffer.getLength()))%255, (initialHue + (i*255/ledBuffer.getLength()))%255, 255);
+            ledBuffer.setRGB(i, (initialHue + (i*255/(ledBuffer.getLength()/3)))%255, (initialHue + (i*255/(ledBuffer.getLength()/3)))%255, 255);
         }
         if(DriverStation.isTeleop()){ speed = 3;}
         else if (DriverStation.isAutonomous()){ speed = 6;}
         else if(DriverStation.isDisabled()){ speed = 1;}
         
         
-        initialHue = (initialHue + speed) % 180;
+        initialHue = (initialHue + speed) % 255;
         led.setData(ledBuffer);
     } 
     

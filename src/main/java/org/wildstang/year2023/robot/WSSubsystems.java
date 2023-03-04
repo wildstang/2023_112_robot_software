@@ -21,7 +21,6 @@ public enum WSSubsystems implements Subsystems {
     CUBE_INTAKE("Cube Intake", CubeIntake.class),
     LED("leds", LedController.class)
     //AIM_HELPER("Aim Helper", AimHelper.class),
-    //SAMPLE("Sample", SampleSubsystem.class)
     ;
 
     /**
