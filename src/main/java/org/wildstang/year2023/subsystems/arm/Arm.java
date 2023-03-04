@@ -32,7 +32,7 @@ public class Arm implements Subsystem {
 
     // states
     double speed,adj;
-    double curPos, goalPos, curPosErr, prevPosErr;
+    double curPos, curPosErr, prevPosErr;
     double curVel, goalVel, curVelErr, prevVelErr;
     double setpoint;
     double prop,integral,der,ff;
@@ -81,7 +81,6 @@ public class Arm implements Subsystem {
         integral = 0;
         curPos =  -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
         curVel = armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI/60;
-        goalPos = curPos;
         setpoint = curPos;
         goalVel = 0;
         adj = 0;
@@ -97,8 +96,7 @@ public class Arm implements Subsystem {
             setpoint += adj;
             setpoint = Math.min(setpoint,ArmConstants.SOFT_STOP_HIGH);  // don't command a position higher than the soft stop
             setpoint = Math.max(setpoint,ArmConstants.SOFT_STOP_LOW);  // don't command a position lower than the soft stop
-            goalPos = setpoint; //goalPos = getPositionTarget(curPos, curVel, goalVel);
-            curPosErr = goalPos-curPos;
+            curPosErr = setpoint-curPos;
 
             // TODO: test below code in place of current code
             // acc = getAccTarget(curVel, curPosErr);
@@ -129,9 +127,9 @@ public class Arm implements Subsystem {
         
         prevPosErr = curPosErr;
         prevOut = curOut;
+        SmartDashboard.putBoolean("arm at target", isAtTarget());
         SmartDashboard.putNumber("arm pos", curPos);
         SmartDashboard.putNumber("arm pos error", curPosErr);
-        SmartDashboard.putNumber("arm goal pos", goalPos);
         SmartDashboard.putNumber("arm setpoint", setpoint);
         SmartDashboard.putNumber("arm output", curOut);
         SmartDashboard.putNumber("arm velocity", curVel);
@@ -265,6 +263,7 @@ public class Arm implements Subsystem {
     }
 
     public boolean isAtTarget() {
+        curPosErr = setpoint-curPos;
         return Math.abs(curPosErr) < ArmConstants.POS_DB && Math.abs(curVel) < ArmConstants.VEL_DB;
     }
 }

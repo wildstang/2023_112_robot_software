@@ -279,7 +279,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
     @Override
     public String getName() {
-        return "Swerve Drive";
+        return "SwerveDrive";
     }
 
     /** resets the drive encoders on each module */

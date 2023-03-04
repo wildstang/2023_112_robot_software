@@ -59,7 +59,7 @@ public class Cable_2pe extends AutoProgram{
 
     @Override
     public String toString() {
-        return "Cable_1p1e";
+        return "Cable_2pe";
     }
     
 }
