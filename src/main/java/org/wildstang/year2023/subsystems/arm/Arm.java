@@ -4,6 +4,7 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.roborio.inputs.WsDPadButton;
+import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
 import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
 import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
@@ -26,6 +27,7 @@ public class Arm implements Subsystem {
     private WsJoystickButton righting;
     private WsJoystickButton substation;
     private WsJoystickButton modeSwitch;
+    private WsDigitalInput limit;
 
     // outputs
     private WsSparkMax armMotor;
@@ -71,6 +73,7 @@ public class Arm implements Subsystem {
         substation.addInputListener(this);
         modeSwitch = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_BUTTON);
         modeSwitch.addInputListener(this);
+        limit = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.ARM_SWITCH);
     }
 
     @Override
@@ -118,7 +121,7 @@ public class Arm implements Subsystem {
         }
         
         // Impose soft stop restrictions to avoid driving arm into hardstops
-        if (curPos <= ArmConstants.SOFT_STOP_LOW){
+        if (curPos <= ArmConstants.SOFT_STOP_LOW || limit.getValue() ){
             curOut = Math.max(0, curOut);
         } else if (curPos > ArmConstants.SOFT_STOP_HIGH){
             curOut = Math.min(0, curOut);
@@ -127,6 +130,8 @@ public class Arm implements Subsystem {
         
         prevPosErr = curPosErr;
         prevOut = curOut;
+        SmartDashboard.putBoolean("limit", limit.getValue());
+        SmartDashboard.putBoolean("arm at target", isAtTarget());
         SmartDashboard.putNumber("arm pos", curPos);
         SmartDashboard.putNumber("arm pos error", curPosErr);
         SmartDashboard.putNumber("arm goal pos", goalPos);
