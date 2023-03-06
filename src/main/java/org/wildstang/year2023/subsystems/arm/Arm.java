@@ -4,6 +4,7 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.roborio.inputs.WsDPadButton;
+import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
 import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
 import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
@@ -26,6 +27,7 @@ public class Arm implements Subsystem {
     private WsJoystickButton righting;
     private WsJoystickButton substation;
     private WsJoystickButton modeSwitch;
+    private WsDigitalInput limit;
 
     // outputs
     private WsSparkMax armMotor;
@@ -40,6 +42,7 @@ public class Arm implements Subsystem {
     double prevOut, curOut;
 
     double acc, torque;
+    double localOffset;
 
     public enum HEIGHT {LOW, MID, HIGH, STOW};
 
@@ -73,6 +76,7 @@ public class Arm implements Subsystem {
         substation.addInputListener(this);
         modeSwitch = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_BUTTON);
         modeSwitch.addInputListener(this);
+        limit = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.ARM_SWITCH);
     }
 
     @Override
@@ -84,18 +88,26 @@ public class Arm implements Subsystem {
         setpoint = curPos;
         goalVel = 0;
         adj = 0;
+        localOffset = 0;
         ctrlMode = MODE.CLOSED_LOOP;
 
     }
 
     @Override
     public void update() {
-        curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
+        if (limit.getValue()){
+            // curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
+            localOffset = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI;
+            curPos = ArmConstants.STOW_POS;
+        } else{
+            curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET - localOffset;
+        }
         curVel = -armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI/60;
         if(ctrlMode == MODE.CLOSED_LOOP){
             setpoint += adj;
             setpoint = Math.min(setpoint,ArmConstants.SOFT_STOP_HIGH);  // don't command a position higher than the soft stop
             setpoint = Math.max(setpoint,ArmConstants.SOFT_STOP_LOW);  // don't command a position lower than the soft stop
+            // goalPos = setpoint; //goalPos = getPositionTarget(curPos, curVel, goalVel);
             curPosErr = setpoint-curPos;
 
             // TODO: test below code in place of current code
@@ -113,20 +125,27 @@ public class Arm implements Subsystem {
             if(isAtTarget()){
                 curOut = ff;
             }
+
+            
+
+            // Impose soft stop restrictions to avoid driving arm into hardstops
+            if(setpoint == ArmConstants.STOW_POS && limit.getValue()){
+                curOut = 0;
+            } else if (curPos <= ArmConstants.SOFT_STOP_LOW || limit.getValue() ){
+                curOut = Math.max(0, curOut);
+            } else if (curPos > ArmConstants.SOFT_STOP_HIGH){
+                curOut = Math.min(0, curOut);
+            }
         } else if (ctrlMode == MODE.OPEN_LOOP) {
             curOut = -speed;
         }
         
-        // Impose soft stop restrictions to avoid driving arm into hardstops
-        if (curPos <= ArmConstants.SOFT_STOP_LOW){
-            curOut = Math.max(0, curOut);
-        } else if (curPos > ArmConstants.SOFT_STOP_HIGH){
-            curOut = Math.min(0, curOut);
-        }
+        
         armMotor.setSpeed(-curOut);
         
         prevPosErr = curPosErr;
         prevOut = curOut;
+        SmartDashboard.putBoolean("limit", limit.getValue());
         SmartDashboard.putBoolean("arm at target", isAtTarget());
         SmartDashboard.putNumber("arm pos", curPos);
         SmartDashboard.putNumber("arm pos error", curPosErr);
