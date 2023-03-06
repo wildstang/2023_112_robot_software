@@ -150,6 +150,7 @@ private static final double HOLD_SPEED = 0.05;
 
     @Override
     public void selfTest() {
+        
     }
 
     public void setGripper(boolean deploy){

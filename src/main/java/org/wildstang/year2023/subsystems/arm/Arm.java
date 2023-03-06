@@ -34,7 +34,7 @@ public class Arm implements Subsystem {
 
     // states
     double speed,adj;
-    double curPos, goalPos, curPosErr, prevPosErr;
+    double curPos, curPosErr, prevPosErr;
     double curVel, goalVel, curVelErr, prevVelErr;
     double setpoint;
     double prop,integral,der,ff;
@@ -42,9 +42,12 @@ public class Arm implements Subsystem {
     double prevOut, curOut;
 
     double acc, torque;
+    double localOffset;
 
-    private enum mode {CLOSED_LOOP, OPEN_LOOP};
-    private mode ctrlMode;
+    public enum HEIGHT {LOW, MID, HIGH, STOW};
+
+    private enum MODE {CLOSED_LOOP, OPEN_LOOP};
+    private MODE ctrlMode;
 
 
     @Override
@@ -82,24 +85,30 @@ public class Arm implements Subsystem {
         integral = 0;
         curPos =  -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
         curVel = armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI/60;
-        goalPos = curPos;
         setpoint = curPos;
         goalVel = 0;
         adj = 0;
-        ctrlMode = mode.CLOSED_LOOP;
+        localOffset = 0;
+        ctrlMode = MODE.CLOSED_LOOP;
 
     }
 
     @Override
     public void update() {
-        curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
+        if (limit.getValue()){
+            // curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
+            localOffset = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI;
+            curPos = ArmConstants.STOW_POS;
+        } else{
+            curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET - localOffset;
+        }
         curVel = -armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI/60;
-        if(ctrlMode == mode.CLOSED_LOOP){
+        if(ctrlMode == MODE.CLOSED_LOOP){
             setpoint += adj;
             setpoint = Math.min(setpoint,ArmConstants.SOFT_STOP_HIGH);  // don't command a position higher than the soft stop
             setpoint = Math.max(setpoint,ArmConstants.SOFT_STOP_LOW);  // don't command a position lower than the soft stop
-            goalPos = setpoint; //goalPos = getPositionTarget(curPos, curVel, goalVel);
-            curPosErr = goalPos-curPos;
+            // goalPos = setpoint; //goalPos = getPositionTarget(curPos, curVel, goalVel);
+            curPosErr = setpoint-curPos;
 
             // TODO: test below code in place of current code
             // acc = getAccTarget(curVel, curPosErr);
@@ -116,16 +125,22 @@ public class Arm implements Subsystem {
             if(isAtTarget()){
                 curOut = ff;
             }
-        } else if (ctrlMode == mode.OPEN_LOOP) {
+
+            
+
+            // Impose soft stop restrictions to avoid driving arm into hardstops
+            if(setpoint == ArmConstants.STOW_POS && limit.getValue()){
+                curOut = 0;
+            } else if (curPos <= ArmConstants.SOFT_STOP_LOW || limit.getValue() ){
+                curOut = Math.max(0, curOut);
+            } else if (curPos > ArmConstants.SOFT_STOP_HIGH){
+                curOut = Math.min(0, curOut);
+            }
+        } else if (ctrlMode == MODE.OPEN_LOOP) {
             curOut = -speed;
         }
         
-        // Impose soft stop restrictions to avoid driving arm into hardstops
-        if (curPos <= ArmConstants.SOFT_STOP_LOW || limit.getValue() ){
-            curOut = Math.max(0, curOut);
-        } else if (curPos > ArmConstants.SOFT_STOP_HIGH){
-            curOut = Math.min(0, curOut);
-        }
+        
         armMotor.setSpeed(-curOut);
         
         prevPosErr = curPosErr;
@@ -134,7 +149,6 @@ public class Arm implements Subsystem {
         SmartDashboard.putBoolean("arm at target", isAtTarget());
         SmartDashboard.putNumber("arm pos", curPos);
         SmartDashboard.putNumber("arm pos error", curPosErr);
-        SmartDashboard.putNumber("arm goal pos", goalPos);
         SmartDashboard.putNumber("arm setpoint", setpoint);
         SmartDashboard.putNumber("arm output", curOut);
         SmartDashboard.putNumber("arm velocity", curVel);
@@ -159,16 +173,16 @@ public class Arm implements Subsystem {
         }
 
         if (source == modeSwitch && modeSwitch.getValue()){
-            if (ctrlMode == mode.CLOSED_LOOP){
-                ctrlMode = mode.OPEN_LOOP;
+            if (ctrlMode == MODE.CLOSED_LOOP){
+                ctrlMode = MODE.OPEN_LOOP;
             } else{
-                ctrlMode = mode.CLOSED_LOOP;
+                ctrlMode = MODE.CLOSED_LOOP;
                 setpoint = curPos;
             }
         }
 
         if(source == joystick){
-            if (ctrlMode == mode.CLOSED_LOOP){
+            if (ctrlMode == MODE.CLOSED_LOOP){
                 if (Math.abs(joystick.getValue()) > 0.1){
                     adj = -joystick.getValue() * .01;
                 } else {
@@ -247,7 +261,28 @@ public class Arm implements Subsystem {
         this.setpoint = target;
     }
 
+    public void autoPosition(HEIGHT height) {
+
+        if (height == HEIGHT.HIGH) {
+            setpoint = ArmConstants.HIGH_POS;
+        }
+
+        else if (height == HEIGHT.MID) {
+            setpoint = ArmConstants.MID_POS;
+        }
+
+        else if (height == HEIGHT.LOW) {
+            setpoint = ArmConstants.LOW_POS;
+        }
+
+        else if (height == HEIGHT.STOW) {
+            setpoint = ArmConstants.STOW_POS;
+        }
+
+    }
+
     public boolean isAtTarget() {
+        curPosErr = setpoint-curPos;
         return Math.abs(curPosErr) < ArmConstants.POS_DB && Math.abs(curVel) < ArmConstants.VEL_DB;
     }
 }
