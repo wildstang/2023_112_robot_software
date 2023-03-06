@@ -5,12 +5,14 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModule {
 
     private double target;
-    private double encoderTarget;
+    // private double encoderTarget;
     private double drivePower;
     private double chassisOffset;
 
@@ -152,5 +154,9 @@ public class SwerveModule {
 
     public WsSparkMax getDriveMotor() {
         return driveMotor;
+    }
+
+    public SwerveModulePosition getSwerveModulePosition(){
+        return new SwerveModulePosition(getPosition()*.0254,new Rotation2d(getAngle()));
     }
 }

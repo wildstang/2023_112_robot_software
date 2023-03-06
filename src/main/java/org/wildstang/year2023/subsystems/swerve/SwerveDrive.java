@@ -13,6 +13,12 @@ import org.wildstang.year2023.robot.WSOutputs;
 // import org.wildstang.year2023.subsystems.targeting.AimHelper;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**Class: SwerveDrive
@@ -38,6 +44,8 @@ public class SwerveDrive extends SwerveDriveTemplate {
     private DigitalInput faceLeft;//rotation lock 270 degrees
     private DigitalInput faceDown;//rotation lock 180 degrees
     private DigitalInput dpadLeft;//defense mode
+    
+    private SwerveDrivePoseEstimator pose;
 
     private double xSpeed;
     private double ySpeed;
@@ -52,7 +60,6 @@ public class SwerveDrive extends SwerveDriveTemplate {
     private double pathHeading;
     private double pathTarget;
 
-    //private final AHRS gyro = new AHRS(SerialPort.Port.kUSB);
     private final Pigeon2 gyro = new Pigeon2(CANConstants.GYRO);
     public SwerveModule[] modules;
     private SwerveSignal swerveSignal;
@@ -152,6 +159,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
     public void init() {
         initInputs();
         initOutputs();
+        initPoseEstimator(new Pose2d());
         resetState();
         gyro.setYaw(0.0);
     }
@@ -207,6 +215,41 @@ public class SwerveDrive extends SwerveDriveTemplate {
         swerveSignal = new SwerveSignal(new double[]{0.0, 0.0, 0.0, 0.0}, new double[]{0.0, 0.0, 0.0, 0.0});
         //limelight = (AimHelper) Core.getSubsystemManager().getSubsystem(WSSubsystems.AIM_HELPER);
     }
+
+    public void initPoseEstimator(Pose2d initialPos){
+        // Locations for the swerve drive modules relative to the robot center.
+        Translation2d m_frontLeftLocation = new Translation2d(-DriveConstants.ROBOT_WIDTH/2*.0254, DriveConstants.ROBOT_LENGTH/2*.0254);
+        Translation2d m_frontRightLocation = new Translation2d(DriveConstants.ROBOT_WIDTH/2*.0254, DriveConstants.ROBOT_LENGTH/2*.0254);
+        Translation2d m_backLeftLocation = new Translation2d(-DriveConstants.ROBOT_WIDTH/2*.0254, -DriveConstants.ROBOT_LENGTH/2*.0254);
+        Translation2d m_backRightLocation = new Translation2d(DriveConstants.ROBOT_WIDTH/2*.0254, -DriveConstants.ROBOT_LENGTH/2*.0254);
+
+        // Creating my kinematics object using the module locations
+        SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
+        m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation
+        );
+        pose = new SwerveDrivePoseEstimator(m_kinematics, new Rotation2d(getGyroAngle()*Math.PI/180), 
+        new SwerveModulePosition[] {
+            modules[0].getSwerveModulePosition(),
+            modules[1].getSwerveModulePosition(),
+            modules[2].getSwerveModulePosition(),
+            modules[3].getSwerveModulePosition()
+        }, initialPos );
+    }
+    public void updateOdometry() {
+        pose.update(
+            new Rotation2d(getGyroAngle()*Math.PI/180),
+            new SwerveModulePosition[] {
+                modules[0].getSwerveModulePosition(),
+                modules[1].getSwerveModulePosition(),
+                modules[2].getSwerveModulePosition(),
+                modules[3].getSwerveModulePosition()
+            });
+
+        //TODO: add vision odometry
+        // var resultTimestamp = pipelineResult.getTimestampSeconds();
+        // pose.addVisionMeasurement(visionMeasurement.toPose2d(), resultTimestamp);
+
+    }
     
     @Override
     public void selfTest() {
@@ -214,6 +257,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
     @Override
     public void update() {
+        updateOdometry();
         if (driveState == driveType.CROSS) {
             //set to cross - done in inputupdate
             this.swerveSignal = swerveHelper.setCross();
