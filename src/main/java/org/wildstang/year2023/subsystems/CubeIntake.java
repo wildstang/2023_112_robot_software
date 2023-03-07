@@ -80,16 +80,16 @@ public class CubeIntake implements Subsystem {
         }
     }    
     
-    public void autoIntake(boolean open){
-        if(open == true){
-            speed = IN_SPEED;
-            deploy = true;
-        }
-        else if(open == false){
-            speed = 0;
-            deploy = false;
-        }
-    }
+    // public void autoIntake(boolean open){
+    //     if(open == true){
+    //         speed = IN_SPEED;
+    //         deploy = true;
+    //     }
+    //     else if(open == false){
+    //         speed = 0;
+    //         deploy = false;
+    //     }
+    // }
 
     @Override
     public String getName() {
@@ -101,7 +101,7 @@ public class CubeIntake implements Subsystem {
     }
 
     public void setDeploy(boolean deploy){
-        this.deploy = true;
+        this.deploy = deploy;
     }
 
     public void setSpeed(double speed){

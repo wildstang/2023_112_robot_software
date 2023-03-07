@@ -257,7 +257,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
     @Override
     public void update() {
-        updateOdometry();
+        // updateOdometry();
         if (driveState == driveType.CROSS) {
             //set to cross - done in inputupdate
             this.swerveSignal = swerveHelper.setCross();
@@ -316,6 +316,8 @@ public class SwerveDrive extends SwerveDriveTemplate {
         pathVel = 0.0;
         pathHeading = 0.0;
         pathTarget = 0.0;
+        swerveHelper.setRotSpeedConst(DriveConstants.ROTATION_SPEED);
+        
 
         isFieldCentric = true;
         isSnake = false;
@@ -351,6 +353,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
     public void setToAuto() {
         driveState = driveType.AUTO;
         resetDriveEncoders();
+        swerveHelper.setRotSpeedConst(1);
     }
 
     /**drives the robot at the current swerveSignal, and displays information for each swerve module */

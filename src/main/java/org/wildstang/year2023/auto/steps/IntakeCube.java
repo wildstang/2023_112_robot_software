@@ -36,7 +36,7 @@ public class IntakeCube extends AutoStep {
             intake.setDeploy(false);
             intake.setSpeed(0);
         }
-        this.setFinished(true);
+        setFinished();
     }
 
     @Override

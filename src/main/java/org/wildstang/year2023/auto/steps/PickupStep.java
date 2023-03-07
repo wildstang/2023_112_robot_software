@@ -6,7 +6,7 @@ import org.wildstang.year2023.robot.WSSubsystems;
 import org.wildstang.year2023.subsystems.arm.Arm;
 import org.wildstang.year2023.subsystems.arm.Arm.HEIGHT;
 import org.wildstang.year2023.subsystems.RollerClaw;
-import org.wildstang.year2023.subsystems.CubeIntake;
+// import org.wildstang.year2023.subsystems.CubeIntake;
 
 
 public class PickupStep extends AutoStep {
@@ -15,7 +15,7 @@ private boolean isStow;
 private String objectType;
 private Arm arm;
 private RollerClaw rollerClaw;
-private CubeIntake cubeIntake;
+// private CubeIntake cubeIntake;
     
     public PickupStep(String gamePiece, boolean stow){
         this.objectType = gamePiece;
@@ -26,7 +26,7 @@ private CubeIntake cubeIntake;
     public void initialize(){
         arm = (Arm) Core.getSubsystemManager().getSubsystem(WSSubsystems.ARM);
         rollerClaw = (RollerClaw) Core.getSubsystemManager().getSubsystem(WSSubsystems.ROLLER_CLAW);
-        cubeIntake = (CubeIntake) Core.getSubsystemManager().getSubsystem(WSSubsystems.CUBE_INTAKE);
+        // cubeIntake = (CubeIntake) Core.getSubsystemManager().getSubsystem(WSSubsystems.CUBE_INTAKE);
     }
 
     @Override
@@ -35,10 +35,10 @@ private CubeIntake cubeIntake;
         if(objectType == "Cube"){
 
             if(isStow == false){
-                cubeIntake.autoIntake(true);
+                // cubeIntake.autoIntake(true);
             }
             else if(isStow == true){
-                cubeIntake.autoIntake(false);
+                // cubeIntake.autoIntake(false);
             }
 
         }

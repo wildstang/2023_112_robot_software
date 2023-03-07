@@ -77,27 +77,33 @@ public class Arm implements Subsystem {
         modeSwitch = (WsJoystickButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_JOYSTICK_BUTTON);
         modeSwitch.addInputListener(this);
         limit = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.ARM_SWITCH);
+        limit.addInputListener(this);
     }
 
     @Override
     public void resetState() {
         speed = 0;
         integral = 0;
-        curPos =  -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
+        if (limit.getValue()){
+            localOffset = Math.min(localOffset,-armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI);
+            curPos = ArmConstants.STOW_POS;
+        } else{
+            localOffset = 0;
+            curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET - localOffset;
+        }
         curVel = armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI/60;
         setpoint = curPos;
         goalVel = 0;
         adj = 0;
-        localOffset = 0;
         ctrlMode = MODE.CLOSED_LOOP;
 
     }
 
     @Override
     public void update() {
+        // curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
         if (limit.getValue()){
-            // curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
-            localOffset = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI;
+            localOffset = Math.min(localOffset,-armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI);
             curPos = ArmConstants.STOW_POS;
         } else{
             curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET - localOffset;
@@ -145,7 +151,8 @@ public class Arm implements Subsystem {
         
         prevPosErr = curPosErr;
         prevOut = curOut;
-        SmartDashboard.putBoolean("limit", limit.getValue());
+        SmartDashboard.putNumber("arm local offset", localOffset);
+        SmartDashboard.putBoolean("arm limit", limit.getValue());
         SmartDashboard.putBoolean("arm at target", isAtTarget());
         SmartDashboard.putNumber("arm pos", curPos);
         SmartDashboard.putNumber("arm pos error", curPosErr);
@@ -193,6 +200,9 @@ public class Arm implements Subsystem {
                     speed = joystick.getValue();
                 }
             }
+        }
+        if (source == limit && limit.getValue()) {
+            localOffset = 0;
         }
     }
 
