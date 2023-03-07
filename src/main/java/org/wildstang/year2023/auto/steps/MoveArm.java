@@ -1,4 +1,4 @@
-package org.wildstang.year2023.auto.Steps;
+package org.wildstang.year2023.auto.steps;
 
 import org.wildstang.framework.auto.AutoStep;
 import org.wildstang.framework.core.Core;
@@ -40,12 +40,14 @@ public class MoveArm extends AutoStep {
     @Override
     public void update() {
         arm.setPosTarget(targetPos);
-        this.setFinished(arm.isAtTarget());
+        if (arm.isAtTarget()){
+            setFinished();
+        }
     }
 
     @Override
     public String toString() {
-        return "Move Arm";
+        return "MoveArm";
     }
     
 }

@@ -25,7 +25,7 @@ public final class ArmConstants{
     public static final double MID_POS = 1.1;
     public static final double LOW_POS = 2.75;
     public static final double CONE_RIGHTING_POS = 2.35;
-    public static final double SUBSTATION_POS = 1.06;
+    public static final double SUBSTATION_POS = 1.11;
     public static final double STOW_POS = -OFFSET; //-2.303 rad
 
     // Soft limits

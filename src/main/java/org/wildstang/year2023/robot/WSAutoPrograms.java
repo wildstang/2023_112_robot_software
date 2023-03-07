@@ -1,7 +1,10 @@
 package org.wildstang.year2023.robot;
 
 import org.wildstang.framework.core.AutoPrograms;
-import org.wildstang.year2023.auto.SampleAutoProgram;
+import org.wildstang.year2023.auto.programs.Cable_1p1;
+import org.wildstang.year2023.auto.programs.Cable_1p1e;
+import org.wildstang.year2023.auto.programs.Cable_2;
+import org.wildstang.year2023.auto.programs.Cable_2pe;
 
 /**
  * All active AutoPrograms are enumerated here.
@@ -10,7 +13,11 @@ import org.wildstang.year2023.auto.SampleAutoProgram;
 public enum WSAutoPrograms implements AutoPrograms {
 
     // enumerate programs
-    TEST_PROGRAM("Sample", SampleAutoProgram.class)
+    // TEST_PROGRAM("Sample", SampleAutoProgram.class),
+    CABLE_1P1("Cable_1p1", Cable_1p1.class),
+    CABLE_1P1E("Cable_1p1e", Cable_1p1e.class),
+    CABLE_2("Cable_2", Cable_2.class),
+    CABLE_2PE("Cable_2pe", Cable_2pe.class)
     ;
 
     /**

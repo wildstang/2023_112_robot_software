@@ -1,4 +1,4 @@
-package org.wildstang.year2023.auto.Steps;
+package org.wildstang.year2023.auto.steps;
 
 import org.wildstang.framework.auto.AutoStep;
 import org.wildstang.framework.core.Core;
@@ -6,13 +6,13 @@ import org.wildstang.year2023.robot.WSSubsystems;
 import org.wildstang.year2023.subsystems.CubeIntake;
 import org.wildstang.year2023.subsystems.RollerClaw;
 
-public class IntakeCubeStep extends AutoStep {
+public class IntakeCube extends AutoStep {
 
     private CubeIntake intake;
     private RollerClaw claw;
     private boolean on;
 
-    public IntakeCubeStep (boolean on){
+    public IntakeCube (boolean on){
         this.on = on;
     }
 
@@ -36,7 +36,7 @@ public class IntakeCubeStep extends AutoStep {
             intake.setDeploy(false);
             intake.setSpeed(0);
         }
-        this.setFinished(true);
+        setFinished();
     }
 
     @Override

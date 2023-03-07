@@ -12,6 +12,7 @@ public class WSSwerveHelper {
     private double rotDelta;
     private double rotPID;
     private double prevVel = 0;
+    private double speedConst;
 
     /** sets the robot in the immobile "cross" defensive position
      * 
@@ -45,7 +46,7 @@ public class WSSwerveHelper {
      */
     public SwerveSignal setDrive(double i_tx, double i_ty, double i_rot, double i_gyro) {
         //magnitude of rotation vector
-        rotMag = i_rot * DriveConstants.ROTATION_SPEED;
+        rotMag = i_rot * speedConst;
         //angle of front left rotation vector
         baseV = Math.atan(DriveConstants.ROBOT_LENGTH / DriveConstants.ROBOT_WIDTH);
 
@@ -82,6 +83,10 @@ public class WSSwerveHelper {
         return setDrive(i_power * -Math.sin(Math.toRadians(i_heading)), i_power * -Math.cos(Math.toRadians(i_heading)), i_rot, i_gyro);
     }
 
+    public void setRotSpeedConst(double speedConst){
+        this.speedConst = speedConst;
+    }
+
     /**automatically creates a rotational joystick value to rotate the robot towards a specific target
      * 
      * @param i_target target direction for the robot to face, field centric, bearing degrees
@@ -99,7 +104,7 @@ public class WSSwerveHelper {
         else {
             rotPID = (rotDelta + 360) / 180;
         } 
-        return Math.signum(rotPID) * Math.min(Math.abs(rotPID*2.5), 1.0);
+        return Math.signum(rotPID) * Math.min(Math.abs(rotPID*4), 1.0);
     }
 
     /**determines the translational magnitude of the robot in autonomous

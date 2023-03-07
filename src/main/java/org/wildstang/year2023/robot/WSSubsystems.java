@@ -15,11 +15,11 @@ import org.wildstang.year2023.subsystems.LedController;
 public enum WSSubsystems implements Subsystems {
 
     // enumerate subsystems
-    SWERVE_DRIVE("Swerve Drive", SwerveDrive.class),
+    SWERVE_DRIVE("SwerveDrive", SwerveDrive.class),
     ARM("Arm", Arm.class),
-    ROLLER_CLAW("Roller Claw", RollerClaw.class),
-    CUBE_INTAKE("Cube Intake", CubeIntake.class),
-    LED("leds", LedController.class)
+    ROLLER_CLAW("RollerClaw", RollerClaw.class),
+    CUBE_INTAKE("CubeIntake", CubeIntake.class),
+    LED("LedController", LedController.class)
     //AIM_HELPER("Aim Helper", AimHelper.class),
     ;
 
