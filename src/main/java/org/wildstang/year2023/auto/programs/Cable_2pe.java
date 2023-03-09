@@ -8,6 +8,7 @@ import org.wildstang.framework.auto.steps.AutoSerialStepGroup;
 import org.wildstang.framework.auto.steps.SwervePathFollowerStep;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.core.Core;
+import org.wildstang.year2023.auto.steps.AutoLightShow;
 import org.wildstang.year2023.auto.steps.PickupStep;
 import org.wildstang.year2023.auto.steps.ScoringStep;
 import org.wildstang.year2023.robot.WSSubsystems;
@@ -54,6 +55,8 @@ public class Cable_2pe extends AutoProgram{
         AutoParallelStepGroup group3 = new AutoParallelStepGroup();
         group3.addStep(new SwervePathFollowerStep(pathGroup.get(1), swerve, color));
         group3.addStep(new ScoringStep(HEIGHT.STOW, "Hold"));
+
+        addStep(new AutoLightShow(true));
 
     }
 
