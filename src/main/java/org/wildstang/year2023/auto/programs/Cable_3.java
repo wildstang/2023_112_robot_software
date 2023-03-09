@@ -25,15 +25,15 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
-public class Cable_2pe extends AutoProgram{
+public class Cable_3 extends AutoProgram{
 
-    private boolean color = false;
+    boolean color;
 
     @Override
     protected void defineSteps() {
         SwerveDrive swerve = (SwerveDrive) Core.getSubsystemManager().getSubsystem(WSSubsystems.SWERVE_DRIVE);
 
-        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Cable_2pe", new PathConstraints(4.0, 3.0));
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Cable_3", new PathConstraints(4.0, 3.0));
 
         color = (DriverStation.getAlliance() == Alliance.Blue);
         
@@ -89,11 +89,13 @@ public class Cable_2pe extends AutoProgram{
         group4.addStep(new MoveArm("STOW"));
         group4.addStep(new ClawRelease(true));
         addStep(group4);
+        
     }
 
     @Override
     public String toString() {
-        return "Cable_2pe";
+        // TODO Auto-generated method stub
+        return "Cable_3";
     }
     
 }
