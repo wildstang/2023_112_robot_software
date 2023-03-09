@@ -110,7 +110,9 @@ public class LedController implements Subsystem{
                 ledBuffer.setRGB(i, autoColorsR[color], autoColorsG[color], autoColorsB[color]);
             }
             timer = 0;
-            color = (color + 1) % autoColorsR.length;
+            if (color < 4){
+                color++;
+            } else color = 0;
         }
         timer++;
     }
