@@ -9,6 +9,7 @@ import org.wildstang.year2023.robot.WSInputs;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LedController implements Subsystem{
 
@@ -74,14 +75,16 @@ public class LedController implements Subsystem{
         } 
 
         if (auto){
-            isRainbow = false; 
+            // isRainbow = false; 
             showTime();
         }
+        SmartDashboard.putNumber("color", color);
     }
 
     @Override
     public void resetState() {
         isRainbow = true;
+        auto = false;
     }
 
     @Override
@@ -105,10 +108,11 @@ public class LedController implements Subsystem{
 
     public void showTime(){
 
-        if (timer >= 25){
+        if (timer >= 13){
             for (int i = 0; i < length; i++){
                 ledBuffer.setRGB(i, autoColorsR[color], autoColorsG[color], autoColorsB[color]);
             }
+            led.setData(ledBuffer);
             timer = 0;
             color = (color + 1) % autoColorsR.length;
         }
@@ -117,6 +121,7 @@ public class LedController implements Subsystem{
 
     public void setAuto(boolean on){
         auto = on;
+        isRainbow = false;
     }
 
     private void rainbow(){
