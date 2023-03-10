@@ -37,7 +37,7 @@ public class Center_1pe extends AutoProgram{
 
         //rotate to heading, stow arm, drive onto charging station
         AutoParallelStepGroup group0 = new AutoParallelStepGroup();
-        group0.addStep(new SwervePathFollowerStep(PathPlanner.loadPath("Center_1pe", new PathConstraints(4.0, 3.0)), swerve, color));
+        group0.addStep(new SwervePathFollowerStep(PathPlanner.loadPath("Center_1pe", new PathConstraints(3.0, 3.0)), swerve, color));
         group0.addStep(new MoveArm("STOW"));
         group0.addStep(new ClawRelease(true));
         addStep(group0);
@@ -47,8 +47,7 @@ public class Center_1pe extends AutoProgram{
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return null;
+        return "Center_1pe";
     }
     
 }

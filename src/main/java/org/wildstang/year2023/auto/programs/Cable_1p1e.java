@@ -33,7 +33,7 @@ public class Cable_1p1e extends AutoProgram{
     protected void defineSteps() {
         SwerveDrive swerve = (SwerveDrive) Core.getSubsystemManager().getSubsystem(WSSubsystems.SWERVE_DRIVE);
 
-        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Cable_1p1e", new PathConstraints(4.0, 3.0));
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Cable_1p1e", new PathConstraints(3.0, 3.0));
 
         color = (DriverStation.getAlliance() == Alliance.Blue);
         

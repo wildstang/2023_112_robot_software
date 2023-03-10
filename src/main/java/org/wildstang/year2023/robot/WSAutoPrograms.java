@@ -1,6 +1,7 @@
 package org.wildstang.year2023.robot;
 
 import org.wildstang.framework.core.AutoPrograms;
+import org.wildstang.year2023.auto.programs.AutoBalanceProgram;
 import org.wildstang.year2023.auto.programs.Cable_1p1;
 import org.wildstang.year2023.auto.programs.Cable_1p1e;
 import org.wildstang.year2023.auto.programs.Cable_2;
@@ -27,7 +28,8 @@ public enum WSAutoPrograms implements AutoPrograms {
     TOP_1P1("Top_1p1",Top_1p1.class),
     TOP_1P1E("Top_1p1e",Top_1p1e.class),
     TOP_2("Top_2",Top_2.class),
-    TOP_2PE("Top_2pe",Top_2pe.class)
+    TOP_2PE("Top_2pe",Top_2pe.class),
+    AUTOBALANCEPROGRAM("AutoBalanceProgram", AutoBalanceProgram.class)
     ;
 
     /**

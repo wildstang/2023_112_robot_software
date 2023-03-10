@@ -91,6 +91,7 @@ public class Arm implements Subsystem {
             localOffset = 0;
             curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET - localOffset;
         }
+        curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET - localOffset;
         curVel = armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI/60;
         setpoint = curPos;
         goalVel = 0;
@@ -102,12 +103,13 @@ public class Arm implements Subsystem {
     @Override
     public void update() {
         // curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET;
-        if (limit.getValue()){
-            localOffset = Math.min(localOffset,-armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI);
-            curPos = ArmConstants.STOW_POS;
-        } else{
-            curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET - localOffset;
-        }
+        // if (limit.getValue()){
+        //     localOffset = Math.min(localOffset,-armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI);
+        //     curPos = ArmConstants.STOW_POS;
+        // } else{
+        //     curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET - localOffset;
+        // }
+        curPos = -armMotor.getPosition() / ArmConstants.RATIO * 2 * Math.PI - ArmConstants.OFFSET - localOffset;
         curVel = -armMotor.getVelocity()/ArmConstants.RATIO*2*Math.PI/60;
         if(ctrlMode == MODE.CLOSED_LOOP){
             setpoint += adj;
@@ -135,9 +137,10 @@ public class Arm implements Subsystem {
             
 
             // Impose soft stop restrictions to avoid driving arm into hardstops
-            if(setpoint == ArmConstants.STOW_POS && limit.getValue()){
-                curOut = 0;
-            } else if (curPos <= ArmConstants.SOFT_STOP_LOW || limit.getValue() ){
+            // if(setpoint == ArmConstants.STOW_POS && limit.getValue()){
+            //     curOut = 0;
+            // } else 
+            if (curPos <= ArmConstants.SOFT_STOP_LOW ){ //|| limit.getValue() 
                 curOut = Math.max(0, curOut);
             } else if (curPos > ArmConstants.SOFT_STOP_HIGH){
                 curOut = Math.min(0, curOut);
@@ -201,9 +204,9 @@ public class Arm implements Subsystem {
                 }
             }
         }
-        if (source == limit && limit.getValue()) {
-            localOffset = 0;
-        }
+        // if (source == limit && limit.getValue()) {
+        //     localOffset = 0;
+        // }
     }
 
     @Override

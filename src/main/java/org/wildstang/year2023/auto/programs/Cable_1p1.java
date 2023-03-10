@@ -53,7 +53,7 @@ public class Cable_1p1 extends AutoProgram{
 
         //drive to pickup, and after 1.5 seconds deploy cube intake
         AutoParallelStepGroup group1 = new AutoParallelStepGroup();
-        group1.addStep(new SwervePathFollowerStep(PathPlanner.loadPath("Cable_1p1", new PathConstraints(4.0, 3.0)), swerve, color));
+        group1.addStep(new SwervePathFollowerStep(PathPlanner.loadPath("Cable_1p1", new PathConstraints(3.0, 3.0)), swerve, color));
         AutoSerialStepGroup subgroup1_1 = new AutoSerialStepGroup();
         subgroup1_1.addStep(new AutoStepDelay(1500));
         subgroup1_1.addStep(new IntakeCube(true));

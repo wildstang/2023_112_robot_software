@@ -5,16 +5,19 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.year2023.robot.WSSubsystems;
 import org.wildstang.year2023.subsystems.swerve.SwerveDrive;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoBalance extends AutoStep {
 
     private SwerveDrive swerve;
     // private double heading;
     // private boolean isBlue;
-    private static final double kP = 0.02;
-    private static final double kD = 0.2;
+    private static final double kP = 0.8;
+    private static final double kD = 0.0;
     private double error, prevErr;
+    private double heading;
+    private double dOut;
+    private double output;
 
     public AutoBalance (){
         // this.isBlue = isBlue;
@@ -30,13 +33,22 @@ public class AutoBalance extends AutoStep {
     @Override
     public void update() {
         error = swerve.getGyroPitch();
-        swerve.setAutoValues(kP * error, 0);
-        //dOut = kD * (error - prevErr);
-        
-        if (Math.abs(error) < 3 || DriverStation.getMatchTime() <= 0.1) {
-            swerve.setCross();
-            setFinished();
+        dOut = kD * (error - prevErr);
+        output = kP*error + dOut;
+        if(output<0){
+            heading = 180;
+        } else {
+            heading = 0;
         }
+        
+        SmartDashboard.putNumber("gyro balance output", error);
+        SmartDashboard.putNumber("gyro d term", dOut);
+        swerve.setAutoValues(Math.abs(output), heading);
+        
+        // if (Math.abs(error) < 3) { // || DriverStation.getMatchTime() <= 0.1
+        //     // swerve.setCross();
+        //     setFinished();
+        // }
 
         prevErr = error;
     }
