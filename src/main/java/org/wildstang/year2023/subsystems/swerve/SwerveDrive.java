@@ -387,6 +387,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
     /**sets autonomous values from the path data file */
     public void setAutoValues(double velocity, double heading) {
+        driveState = driveType.AUTO;
         pathVel = velocity;
         pathHeading = heading;
     }

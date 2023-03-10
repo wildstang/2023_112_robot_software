@@ -11,6 +11,7 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.year2023.auto.steps.ClawRelease;
 import org.wildstang.year2023.auto.steps.IntakeCube;
 import org.wildstang.year2023.auto.steps.MoveArm;
+import org.wildstang.year2023.auto.steps.SetAutoDriveStep;
 import org.wildstang.year2023.auto.steps.WaitForHeading;
 // import org.wildstang.year2023.auto.steps.PickupStep;
 // import org.wildstang.year2023.auto.steps.ScoringStep;
@@ -35,6 +36,7 @@ public class Top_1p1 extends AutoProgram{
         color = (DriverStation.getAlliance() == Alliance.Blue);
         
         //score preload
+        addStep(new SetAutoDriveStep());
         addStep(new SetGyroStep(180, swerve));
         addStep(new PathHeadingStep(180, swerve));
         addStep(new MoveArm("MID"));
