@@ -5,6 +5,7 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.year2023.robot.WSSubsystems;
 import org.wildstang.year2023.subsystems.swerve.SwerveDrive;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoBalance extends AutoStep {
@@ -44,9 +45,9 @@ public class AutoBalance extends AutoStep {
         SmartDashboard.putNumber("gyro balance output", error);
         SmartDashboard.putNumber("gyro d term", dOut);
         
-        if (Math.abs(error) < 3) { // || DriverStation.getMatchTime() <= 0.1
+        if (Math.abs(error) < 3|| DriverStation.getMatchTime() <= 0.1) { // 
             swerve.setCross();
-            // setFinished();
+            setFinished();
         } else {
             swerve.setAutoValues(Math.abs(output), heading);
         }
