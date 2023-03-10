@@ -43,12 +43,13 @@ public class AutoBalance extends AutoStep {
         
         SmartDashboard.putNumber("gyro balance output", error);
         SmartDashboard.putNumber("gyro d term", dOut);
-        swerve.setAutoValues(Math.abs(output), heading);
         
-        // if (Math.abs(error) < 3) { // || DriverStation.getMatchTime() <= 0.1
-        //     // swerve.setCross();
-        //     setFinished();
-        // }
+        if (Math.abs(error) < 3) { // || DriverStation.getMatchTime() <= 0.1
+            swerve.setCross();
+            // setFinished();
+        } else {
+            swerve.setAutoValues(Math.abs(output), heading);
+        }
 
         prevErr = error;
     }
