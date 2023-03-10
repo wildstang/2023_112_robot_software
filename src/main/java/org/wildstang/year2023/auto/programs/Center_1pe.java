@@ -42,7 +42,7 @@ public class Center_1pe extends AutoProgram{
         group0.addStep(new ClawRelease(true));
         addStep(group0);
         
-        addStep( new AutoBalance());
+        addStep(new AutoBalance());
     }
 
     @Override

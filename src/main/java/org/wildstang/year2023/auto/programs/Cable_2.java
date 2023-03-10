@@ -66,7 +66,7 @@ public class Cable_2 extends AutoProgram{
         //stow intake and drive to cube node
         AutoParallelStepGroup group2 = new AutoParallelStepGroup();
         group2.addStep(new PathHeadingStep(180, swerve));
-        group2.addStep(new WaitForHeading(189, swerve));
+        group2.addStep(new WaitForHeading(180, swerve));
         group2.addStep(new ClawRelease(true));
         group2.addStep(new IntakeCube(false)); // stow intake
         addStep(group2);
