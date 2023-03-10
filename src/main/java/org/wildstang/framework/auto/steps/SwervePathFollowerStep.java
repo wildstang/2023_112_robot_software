@@ -32,7 +32,7 @@ public class SwervePathFollowerStep extends AutoStep {
     @Override
     public void initialize() {
         //start path
-        m_drive.resetDriveEncoders();
+        // m_drive.resetDriveEncoders();
         m_drive.setToAuto();
         timer.start();
     }

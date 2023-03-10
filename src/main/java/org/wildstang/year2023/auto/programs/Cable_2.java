@@ -13,6 +13,7 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.year2023.auto.steps.ClawRelease;
 import org.wildstang.year2023.auto.steps.IntakeCube;
 import org.wildstang.year2023.auto.steps.MoveArm;
+import org.wildstang.year2023.auto.steps.SetAutoDriveStep;
 import org.wildstang.year2023.auto.steps.WaitForHeading;
 import org.wildstang.year2023.robot.WSSubsystems;
 import org.wildstang.year2023.subsystems.swerve.SwerveDrive;
@@ -20,6 +21,9 @@ import org.wildstang.year2023.subsystems.swerve.SwerveDrive;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class Cable_2 extends AutoProgram{
 
@@ -29,9 +33,12 @@ public class Cable_2 extends AutoProgram{
     protected void defineSteps() {
         SwerveDrive swerve = (SwerveDrive) Core.getSubsystemManager().getSubsystem(WSSubsystems.SWERVE_DRIVE);
 
-        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Cable_2", new PathConstraints(4.0, 3.0));
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Cable_2", new PathConstraints(3.0, 3.0));
 
+        color = (DriverStation.getAlliance() == Alliance.Blue);
+        
         //score preload
+        addStep(new SetAutoDriveStep());
         addStep(new SetGyroStep(180, swerve));
         addStep(new PathHeadingStep(180, swerve));
         addStep(new MoveArm("MID"));
@@ -47,7 +54,7 @@ public class Cable_2 extends AutoProgram{
         addStep(group0);
 
         AutoParallelStepGroup group1 = new AutoParallelStepGroup();
-        group1.addStep(new SwervePathFollowerStep(PathPlanner.loadPath("Cable_1p1", new PathConstraints(4.0, 3.0)), swerve, color));
+        group1.addStep(new SwervePathFollowerStep(pathGroup.get(0), swerve, color));
         AutoSerialStepGroup subgroup1_1 = new AutoSerialStepGroup();
         subgroup1_1.addStep(new AutoStepDelay(1500));
         subgroup1_1.addStep(new IntakeCube(true));

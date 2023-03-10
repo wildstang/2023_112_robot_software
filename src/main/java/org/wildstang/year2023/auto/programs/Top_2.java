@@ -13,7 +13,6 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.year2023.auto.steps.ClawRelease;
 import org.wildstang.year2023.auto.steps.IntakeCube;
 import org.wildstang.year2023.auto.steps.MoveArm;
-import org.wildstang.year2023.auto.steps.SetAutoDriveStep;
 import org.wildstang.year2023.auto.steps.WaitForHeading;
 import org.wildstang.year2023.robot.WSSubsystems;
 import org.wildstang.year2023.subsystems.swerve.SwerveDrive;
@@ -25,7 +24,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
-public class Cable_1p1e extends AutoProgram{
+public class Top_2 extends AutoProgram{
 
     private boolean color = true;
 
@@ -33,12 +32,11 @@ public class Cable_1p1e extends AutoProgram{
     protected void defineSteps() {
         SwerveDrive swerve = (SwerveDrive) Core.getSubsystemManager().getSubsystem(WSSubsystems.SWERVE_DRIVE);
 
-        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Cable_1p1e", new PathConstraints(3.0, 3.0));
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Top_2", new PathConstraints(4.0, 3.0));
 
         color = (DriverStation.getAlliance() == Alliance.Blue);
         
         //score preload
-        addStep(new SetAutoDriveStep());
         addStep(new SetGyroStep(180, swerve));
         addStep(new PathHeadingStep(180, swerve));
         addStep(new MoveArm("MID"));
@@ -63,17 +61,37 @@ public class Cable_1p1e extends AutoProgram{
 
         addStep(new AutoStepDelay(800));
         
-        //stow intake and drive onto charge station
+        //stow intake and drive to cube node
         AutoParallelStepGroup group2 = new AutoParallelStepGroup();
-        group2.addStep(new SwervePathFollowerStep(pathGroup.get(1), swerve, color));
+        group2.addStep(new PathHeadingStep(180, swerve));
+        group2.addStep(new WaitForHeading(189, swerve));
+        group2.addStep(new ClawRelease(true));
         group2.addStep(new IntakeCube(false)); // stow intake
         addStep(group2);
+
+        AutoParallelStepGroup group3 = new AutoParallelStepGroup();
+        group3.addStep(new SwervePathFollowerStep(pathGroup.get(1), swerve, color));
+        AutoSerialStepGroup subgroup3_1 = new AutoSerialStepGroup();
+        subgroup3_1.addStep(new AutoStepDelay(1500));
+        subgroup3_1.addStep(new MoveArm("MID"));
+        group3.addStep(subgroup3_1);
+        addStep(group3);
+
+        // score cube
+        addStep(new ClawRelease(false));
+        addStep(new AutoStepDelay(500));
+
+        //move arm to stow
+        AutoParallelStepGroup group4 = new AutoParallelStepGroup();
+        group4.addStep(new MoveArm("STOW"));
+        group4.addStep(new ClawRelease(true));
+        addStep(group4);
 
     }
 
     @Override
     public String toString() {
-        return "Cable_1p1e";
+        return "Top_2";
     }
     
 }

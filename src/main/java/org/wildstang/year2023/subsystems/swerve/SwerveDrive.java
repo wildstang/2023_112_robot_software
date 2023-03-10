@@ -216,7 +216,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
         //limelight = (AimHelper) Core.getSubsystemManager().getSubsystem(WSSubsystems.AIM_HELPER);
     }
 
-    public void initPoseEstimator(Pose2d initialPos){
+    private void initPoseEstimator(Pose2d initialPos){
         // Locations for the swerve drive modules relative to the robot center.
         Translation2d m_frontLeftLocation = new Translation2d(-DriveConstants.ROBOT_WIDTH/2*.0254, DriveConstants.ROBOT_LENGTH/2*.0254);
         Translation2d m_frontRightLocation = new Translation2d(DriveConstants.ROBOT_WIDTH/2*.0254, DriveConstants.ROBOT_LENGTH/2*.0254);
@@ -235,7 +235,8 @@ public class SwerveDrive extends SwerveDriveTemplate {
             modules[3].getSwerveModulePosition()
         }, initialPos );
     }
-    public void updateOdometry() {
+
+    private void updateOdometry() {
         pose.update(
             new Rotation2d(getGyroAngle()*Math.PI/180),
             new SwerveModulePosition[] {
@@ -250,6 +251,17 @@ public class SwerveDrive extends SwerveDriveTemplate {
         // pose.addVisionMeasurement(visionMeasurement.toPose2d(), resultTimestamp);
 
     }
+
+    public void resetOdometry(Pose2d newPose) {
+        resetDriveEncoders();
+        this.pose.resetPosition(new Rotation2d(getGyroAngle()), 
+                                new SwerveModulePosition[] {
+                                    modules[0].getSwerveModulePosition(),
+                                    modules[1].getSwerveModulePosition(),
+                                    modules[2].getSwerveModulePosition(),
+                                    modules[3].getSwerveModulePosition()
+                                }, newPose);
+    }
     
     @Override
     public void selfTest() {
@@ -257,7 +269,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
     @Override
     public void update() {
-        // updateOdometry();
+        updateOdometry();
         if (driveState == driveType.CROSS) {
             //set to cross - done in inputupdate
             this.swerveSignal = swerveHelper.setCross();
@@ -289,7 +301,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
             
             //update where the robot is, to determine error in path
             this.swerveSignal = swerveHelper.setAuto(swerveHelper.getAutoPower(pathVel), pathHeading, rotSpeed, getGyroAngle());
-            drive();        
+            drive();
         }
         if (driveState == driveType.LL) {}
 
@@ -302,6 +314,8 @@ public class SwerveDrive extends SwerveDriveTemplate {
         SmartDashboard.putNumber("Auto velocity", pathVel);
         SmartDashboard.putNumber("Auto translate direction", pathHeading);
         SmartDashboard.putNumber("Auto rotation target", pathTarget);
+        SmartDashboard.putNumber("Gyro Pitch", getGyroPitch());
+        SmartDashboard.putString("swerve odometery", pose.getEstimatedPosition().toString());
     }
     
     @Override
@@ -309,14 +323,12 @@ public class SwerveDrive extends SwerveDriveTemplate {
         xSpeed = 0;
         ySpeed = 0;
         rotSpeed = 0;
-        //gyro.reset();
         setToTeleop();
         rotLocked = false;
         rotTarget = 0.0;
         pathVel = 0.0;
         pathHeading = 0.0;
         pathTarget = 0.0;
-        swerveHelper.setRotSpeedConst(DriveConstants.ROTATION_SPEED);
         
 
         isFieldCentric = true;
@@ -347,12 +359,13 @@ public class SwerveDrive extends SwerveDriveTemplate {
         pathHeading = 0;
         pathVel = 0;
         rotLocked = false;
+        swerveHelper.setRotSpeedConst(DriveConstants.ROTATION_SPEED);
     }
 
     /**sets the drive to autonomous */
     public void setToAuto() {
         driveState = driveType.AUTO;
-        resetDriveEncoders();
+        // resetDriveEncoders();
         swerveHelper.setRotSpeedConst(1);
     }
 
@@ -378,6 +391,10 @@ public class SwerveDrive extends SwerveDriveTemplate {
         pathHeading = heading;
     }
 
+    public void setCross() {
+        driveState = driveType.CROSS;
+    }
+
     /**sets the autonomous heading controller to a new target */
     public void setAutoHeading(double headingTarget) {
         pathTarget = headingTarget;
@@ -393,8 +410,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
      * @param degrees the current value the gyro should read
      */
     public void setGyro(double degrees) {
-        resetState();
-        setToAuto();
+        // resetState();
         gyro.setYaw(degrees);
     }
 
@@ -403,4 +419,8 @@ public class SwerveDrive extends SwerveDriveTemplate {
         //limelight.setGyroValue((gyro.getYaw() + 360)%360);
         return (359.99 - gyro.getYaw()+360)%360;
     }  
+
+    public double getGyroPitch() {
+        return gyro.getRoll();
+    }
 }
