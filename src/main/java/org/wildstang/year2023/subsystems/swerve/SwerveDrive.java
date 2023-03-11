@@ -252,9 +252,9 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
     }
 
-    public void resetOdometry(Pose2d newPose) {
+    public void resetOdometry(Pose2d newPose, Rotation2d heading) {
         resetDriveEncoders();
-        this.pose.resetPosition(new Rotation2d(getGyroAngle()), 
+        this.pose.resetPosition(heading, 
                                 new SwerveModulePosition[] {
                                     modules[0].getSwerveModulePosition(),
                                     modules[1].getSwerveModulePosition(),
@@ -387,7 +387,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
     /**sets autonomous values from the path data file */
     public void setAutoValues(double velocity, double heading) {
-        driveState = driveType.AUTO;
+        // driveState = driveType.AUTO;
         pathVel = velocity;
         pathHeading = heading;
     }

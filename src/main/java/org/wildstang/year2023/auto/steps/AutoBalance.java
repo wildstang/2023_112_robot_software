@@ -28,6 +28,7 @@ public class AutoBalance extends AutoStep {
     @Override
     public void initialize() {
         swerve = (SwerveDrive) Core.getSubsystemManager().getSubsystem(WSSubsystems.SWERVE_DRIVE);
+        swerve.setToAuto();
         
     }
 
