@@ -9,6 +9,7 @@ import org.wildstang.year2023.robot.WSInputs;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LedController implements Subsystem{
 
@@ -21,6 +22,12 @@ public class LedController implements Subsystem{
     private int port = 9;//port
     private int length = 45;//length
     private int initialHue = 0;
+    private boolean auto; 
+    private int[] autoColorsR = {52, 33, 11, 255};
+    private int[] autoColorsG = {161, 79, 2, 255};
+    private int[] autoColorsB = {236, 194, 97, 255};
+    private int timer = 0;
+    private int color = 0;
     private boolean isRainbow = true;
     private int speed = 1;
 
@@ -65,12 +72,19 @@ public class LedController implements Subsystem{
     public void update() {
         if (isRainbow){
             rainbow();
+        } 
+
+        if (auto){
+            // isRainbow = false; 
+            showTime();
         }
+        SmartDashboard.putNumber("color", color);
     }
 
     @Override
     public void resetState() {
         isRainbow = true;
+        auto = false;
     }
 
     @Override
@@ -90,6 +104,24 @@ public class LedController implements Subsystem{
             ledBuffer.setRGB(i, 255, 255, 0);
         }
         led.setData(ledBuffer);
+    }
+
+    public void showTime(){
+
+        if (timer >= 13){
+            for (int i = 0; i < length; i++){
+                ledBuffer.setRGB(i, autoColorsR[color], autoColorsG[color], autoColorsB[color]);
+            }
+            led.setData(ledBuffer);
+            timer = 0;
+            color = (color + 1) % autoColorsR.length;
+        }
+        timer++;
+    }
+
+    public void setAuto(boolean on){
+        auto = on;
+        isRainbow = false;
     }
 
     private void rainbow(){
