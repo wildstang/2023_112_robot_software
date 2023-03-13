@@ -39,16 +39,15 @@ public class Cable_2 extends AutoProgram{
         color = (DriverStation.getAlliance() == Alliance.Blue);
         
         //score preload
-        addStep(new SetAutoDriveStep());
-        addStep(new SetGyroStep(180, swerve));
-        addStep(new PathHeadingStep(180, swerve));
         addStep(new MoveArm("MID"));
         addStep(new ClawRelease(false));
+        addStep(new SetGyroStep(180, swerve));
         addStep(new AutoStepDelay(500));
 
         //drive to pickup, move arm to stow, and after 2 seconds deploy cube intake
         AutoParallelStepGroup group0 = new AutoParallelStepGroup();
         group0.addStep(new PathHeadingStep(-2, swerve));
+        group0.addStep(new SetAutoDriveStep());
         group0.addStep(new WaitForHeading(-2, swerve));
         group0.addStep(new MoveArm("STOW"));
         group0.addStep(new ClawRelease(true));
@@ -87,10 +86,12 @@ public class Cable_2 extends AutoProgram{
         //move arm to stow
         AutoParallelStepGroup group4 = new AutoParallelStepGroup();
         group4.addStep(new MoveArm("STOW"));
-        group4.addStep(new ClawRelease(true));
+        AutoSerialStepGroup subgroup4_1 = new AutoSerialStepGroup();
+        subgroup4_1.addStep(new AutoStepDelay(800));
+        subgroup4_1.addStep(new ClawRelease(true));
         addStep(group4);
 
-        addStep(new AutoLightShow(true));
+        // addStep(new AutoLightShow(true));
 
     }
 
