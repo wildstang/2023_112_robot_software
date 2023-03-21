@@ -29,14 +29,13 @@ public class AutoLightShow extends AutoStep{
     @Override
     public void update() {
         if (DriverStation.getMatchTime() <= 0){
-            setFinished();
             board.setAuto(false);
+            setFinished();
         } 
     }
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return "AutoLightShow";
     }
     

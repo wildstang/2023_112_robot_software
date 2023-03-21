@@ -60,5 +60,7 @@ public class SwervePathFollowerStep extends AutoStep {
     public double getHeading(){
         if (isBlue) return (-pathData.sample(timer.get()).poseMeters.getRotation().getDegrees() + 360)%360;
         else return (pathData.sample(timer.get()).poseMeters.getRotation().getDegrees()+360)%360;
+        // pathData.sample(timer.get());
     }
+    
 }

@@ -10,6 +10,7 @@ import org.wildstang.framework.auto.steps.SetGyroStep;
 import org.wildstang.framework.auto.steps.SwervePathFollowerStep;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.core.Core;
+import org.wildstang.year2023.auto.steps.AutoLightShow;
 import org.wildstang.year2023.auto.steps.ClawRelease;
 import org.wildstang.year2023.auto.steps.IntakeCube;
 import org.wildstang.year2023.auto.steps.MoveArm;
@@ -89,12 +90,13 @@ public class Cable_3 extends AutoProgram{
         group4.addStep(new MoveArm("STOW"));
         group4.addStep(new ClawRelease(true));
         addStep(group4);
+
+        addStep(new AutoLightShow(true));
         
     }
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return "Cable_3";
     }
     

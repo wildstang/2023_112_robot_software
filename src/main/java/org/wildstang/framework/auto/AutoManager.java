@@ -138,4 +138,8 @@ public class AutoManager {
         programs.add(program);
         chooser.addOption(program.toString(), program);
     }
+
+    public boolean isLockedIn(){
+        return lockinChooser.getSelected();
+    }
 }

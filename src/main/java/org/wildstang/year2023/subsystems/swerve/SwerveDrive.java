@@ -218,10 +218,10 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
     private void initPoseEstimator(Pose2d initialPos){
         // Locations for the swerve drive modules relative to the robot center.
-        Translation2d m_frontLeftLocation = new Translation2d(-DriveConstants.ROBOT_WIDTH/2*.0254, DriveConstants.ROBOT_LENGTH/2*.0254);
-        Translation2d m_frontRightLocation = new Translation2d(DriveConstants.ROBOT_WIDTH/2*.0254, DriveConstants.ROBOT_LENGTH/2*.0254);
-        Translation2d m_backLeftLocation = new Translation2d(-DriveConstants.ROBOT_WIDTH/2*.0254, -DriveConstants.ROBOT_LENGTH/2*.0254);
-        Translation2d m_backRightLocation = new Translation2d(DriveConstants.ROBOT_WIDTH/2*.0254, -DriveConstants.ROBOT_LENGTH/2*.0254);
+        Translation2d m_frontLeftLocation  = new Translation2d(-DriveConstants.ROBOT_WIDTH/2.0*.0254,  DriveConstants.ROBOT_LENGTH/2.0*.0254);
+        Translation2d m_frontRightLocation = new Translation2d( DriveConstants.ROBOT_WIDTH/2.0*.0254,  DriveConstants.ROBOT_LENGTH/2.0*.0254);
+        Translation2d m_backLeftLocation   = new Translation2d(-DriveConstants.ROBOT_WIDTH/2.0*.0254, -DriveConstants.ROBOT_LENGTH/2.0*.0254);
+        Translation2d m_backRightLocation  = new Translation2d( DriveConstants.ROBOT_WIDTH/2.0*.0254, -DriveConstants.ROBOT_LENGTH/2.0*.0254);
 
         // Creating my kinematics object using the module locations
         SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
@@ -238,7 +238,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
 
     private void updateOdometry() {
         pose.update(
-            new Rotation2d(getGyroAngle()*Math.PI/180),
+            new Rotation2d(-getGyroAngle()*Math.PI/180),
             new SwerveModulePosition[] {
                 modules[0].getSwerveModulePosition(),
                 modules[1].getSwerveModulePosition(),
@@ -287,7 +287,6 @@ public class SwerveDrive extends SwerveDriveTemplate {
                         rotSpeed *= 4;
                         if (Math.abs(rotSpeed) > 1) rotSpeed = 1.0 * Math.signum(rotSpeed);
                     }
-                    
                 } 
             }
             this.swerveSignal = swerveHelper.setDrive(xSpeed, ySpeed, rotSpeed, getGyroAngle());
@@ -316,21 +315,25 @@ public class SwerveDrive extends SwerveDriveTemplate {
         SmartDashboard.putNumber("Auto rotation target", pathTarget);
         SmartDashboard.putNumber("Gyro Pitch", getGyroPitch());
         SmartDashboard.putString("swerve odometery", pose.getEstimatedPosition().toString());
+        SmartDashboard.putNumber("rotTarget", rotTarget);
     }
     
     @Override
     public void resetState() {
+        driveState = driveType.TELEOP;
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].setDriveBrake(false);
+        }
+        swerveHelper.setRotSpeedConst(DriveConstants.ROTATION_SPEED);
+
         xSpeed = 0;
         ySpeed = 0;
         rotSpeed = 0;
-        setToTeleop();
         rotLocked = false;
         rotTarget = 0.0;
         pathVel = 0.0;
         pathHeading = 0.0;
         pathTarget = 0.0;
-        
-
         isFieldCentric = true;
         isSnake = false;
     }
@@ -392,7 +395,14 @@ public class SwerveDrive extends SwerveDriveTemplate {
         pathHeading = heading;
     }
 
-    public void setCross() {
+    /**sets autonomous values from the path data file */
+    public void setAutoValues(double velocity, double pathHeading, double holonomicHeading) {
+        // driveState = driveType.AUTO;
+        pathVel = velocity;
+        this.pathHeading = pathHeading;
+    }
+
+    public void setToCross() {
         driveState = driveType.CROSS;
     }
 
@@ -401,7 +411,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
         pathTarget = headingTarget;
     }
 
-    public void setAiming() {
+    public void setToAiming() {
         driveState = driveType.LL;
     }
 
@@ -418,7 +428,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
     public double getGyroAngle() {
         if (!isFieldCentric) return 0;
         //limelight.setGyroValue((gyro.getYaw() + 360)%360);
-        return (359.99 - gyro.getYaw()+360)%360;
+        return (359.99 - gyro.getYaw()+360.0)%360.0;
     }  
 
     public double getGyroPitch() {

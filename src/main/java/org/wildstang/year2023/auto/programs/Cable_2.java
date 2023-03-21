@@ -12,6 +12,7 @@ import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.core.Core;
 import org.wildstang.year2023.auto.steps.AutoLightShow;
 import org.wildstang.year2023.auto.steps.ClawRelease;
+import org.wildstang.year2023.auto.steps.InitializeOdometry;
 import org.wildstang.year2023.auto.steps.IntakeCube;
 import org.wildstang.year2023.auto.steps.MoveArm;
 import org.wildstang.year2023.auto.steps.SetAutoDriveStep;
@@ -23,6 +24,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -39,19 +41,22 @@ public class Cable_2 extends AutoProgram{
         color = (DriverStation.getAlliance() == Alliance.Blue);
         
         //score preload
+        addStep(new SetGyroStep(180, swerve));
+        addStep(new InitializeOdometry(new Translation2d(14.8,0.47), Math.PI));
+        addStep(new AutoStepDelay(5000));
         addStep(new MoveArm("MID"));
         addStep(new ClawRelease(false));
-        addStep(new SetGyroStep(180, swerve));
         addStep(new AutoStepDelay(500));
 
         //drive to pickup, move arm to stow, and after 2 seconds deploy cube intake
-        AutoParallelStepGroup group0 = new AutoParallelStepGroup();
+        AutoParallelStepGroup group0 = new AutoParallelStepGroup("Realign and stow");
         group0.addStep(new PathHeadingStep(-2, swerve));
         group0.addStep(new SetAutoDriveStep());
         group0.addStep(new WaitForHeading(-2, swerve));
         group0.addStep(new MoveArm("STOW"));
         group0.addStep(new ClawRelease(true));
         addStep(group0);
+        addStep(new AutoStepDelay(5000));
 
         AutoParallelStepGroup group1 = new AutoParallelStepGroup();
         group1.addStep(new SwervePathFollowerStep(pathGroup.get(0), swerve, color));
@@ -62,6 +67,7 @@ public class Cable_2 extends AutoProgram{
         addStep(group1);
 
         addStep(new AutoStepDelay(800));
+        addStep(new AutoStepDelay(5000));
         
         //stow intake and drive to cube node
         AutoParallelStepGroup group2 = new AutoParallelStepGroup();
@@ -91,7 +97,7 @@ public class Cable_2 extends AutoProgram{
         subgroup4_1.addStep(new ClawRelease(true));
         addStep(group4);
 
-        // addStep(new AutoLightShow(true));
+        addStep(new AutoLightShow(true));
 
     }
 

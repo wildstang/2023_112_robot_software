@@ -9,6 +9,7 @@ import org.wildstang.framework.auto.steps.SwervePathFollowerStep;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.core.Core;
 import org.wildstang.year2023.auto.steps.AutoBalance;
+import org.wildstang.year2023.auto.steps.AutoLightShow;
 import org.wildstang.year2023.auto.steps.ClawRelease;
 import org.wildstang.year2023.auto.steps.MoveArm;
 import org.wildstang.year2023.auto.steps.SetAutoDriveStep;
@@ -47,6 +48,8 @@ public class Center_1pe extends AutoProgram{
         addStep(group0);
         
         addStep(new AutoBalance());
+
+        addStep(new AutoLightShow(true));
     }
 
     @Override

@@ -20,6 +20,8 @@ public class SwerveModule {
     private WsSparkMax angleMotor;
     private AbsoluteEncoder absEncoder;
 
+    private double odometeryAngle;
+
     /** Class: SwerveModule
      *  controls a single swerve pod, featuring two motors and one offboard sensor
      * @param driveMotor canSparkMax of the drive motor
@@ -97,10 +99,12 @@ public class SwerveModule {
         else if (getDirection(angle)) {
             runAtPower(power);
             runAtAngle(angle);
+            odometeryAngle = getAngle();
         }
         else {
             runAtPower(-power);
             runAtAngle((angle + 180.0) % 360);
+            odometeryAngle = (getAngle() + 180.0) % 360;
         }
     }
 
@@ -157,6 +161,7 @@ public class SwerveModule {
     }
 
     public SwerveModulePosition getSwerveModulePosition(){
-        return new SwerveModulePosition(getPosition()*.0254,new Rotation2d(getAngle()));
+        // TODO: replace getAngle with odometry angle?
+        return new SwerveModulePosition(getPosition()*.0254,new Rotation2d(getAngle()*Math.PI/180.0));
     }
 }

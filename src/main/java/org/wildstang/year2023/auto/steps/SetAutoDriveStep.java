@@ -13,8 +13,6 @@ public class SetAutoDriveStep extends AutoStep{
     public void initialize() {
         swerve = (SwerveDrive) Core.getSubsystemManager().getSubsystem(WSSubsystems.SWERVE_DRIVE);
         swerve.setToAuto();
-        swerve.resetDriveEncoders();
-        
     }
 
     @Override

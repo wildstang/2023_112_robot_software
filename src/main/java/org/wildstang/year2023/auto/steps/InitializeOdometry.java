@@ -7,6 +7,7 @@ import org.wildstang.year2023.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class InitializeOdometry extends AutoStep {
 
@@ -14,15 +15,14 @@ public class InitializeOdometry extends AutoStep {
     private Pose2d initPose;
     private Rotation2d initHeading;
 
-    public InitializeOdometry(Pose2d inPose, Rotation2d inHeading) {
-        initPose = inPose;
-        initHeading = inHeading;
+    public InitializeOdometry(Translation2d inPose, double inHeading) {
+        initHeading = new Rotation2d(inHeading);
+        initPose = new Pose2d(inPose, initHeading);
     }
 
     @Override
     public void initialize() {
         swerve = (SwerveDrive) Core.getSubsystemManager().getSubsystem(WSSubsystems.SWERVE_DRIVE);
-        swerve.resetDriveEncoders();
         swerve.resetOdometry(initPose, initHeading);
     }
 

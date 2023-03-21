@@ -9,7 +9,6 @@ import org.wildstang.year2023.robot.WSInputs;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LedController implements Subsystem{
 
@@ -20,7 +19,7 @@ public class LedController implements Subsystem{
     private AddressableLEDBuffer ledBuffer;
 
     private int port = 9;//port
-    private int length = 45;//length
+    private int length = 256;//length strip:45
     private int initialHue = 0;
     private boolean auto; 
     private int[] autoColorsR = {52, 33, 11, 255};
@@ -33,6 +32,7 @@ public class LedController implements Subsystem{
 
     @Override
     public void inputUpdate(Input source) {
+        auto = false;  // If there is any teleop input, stop running the auto light show
         if (source == coneButton) {
             coneDisplay();
             isRainbow = false;
@@ -70,15 +70,16 @@ public class LedController implements Subsystem{
 
     @Override
     public void update() {
-        if (isRainbow){
+        if (!(Core.getAutoManager().isLockedIn())){
+            for (var i = 0; i < length; i++) {
+                ledBuffer.setRGB(i, 255, 0, 0);
+            }
+            led.setData(ledBuffer);
+        } else if (isRainbow){
             rainbow();
-        } 
-
-        if (auto){
-            // isRainbow = false; 
+        } else if (auto){
             showTime();
         }
-        SmartDashboard.putNumber("color", color);
     }
 
     @Override
@@ -125,8 +126,9 @@ public class LedController implements Subsystem{
     }
 
     private void rainbow(){
+        double brightnessAdjust = 8;
         for (int i = 0; i < ledBuffer.getLength(); i++){
-            ledBuffer.setRGB(i, (initialHue + (i*255/(ledBuffer.getLength()/3)))%255, (initialHue + (i*255/(ledBuffer.getLength()/3)))%255, 255);
+            ledBuffer.setRGB(i, (int) (((initialHue + (i*255/(ledBuffer.getLength()/3)))%255)/brightnessAdjust), (int) (((initialHue + (i*255/(ledBuffer.getLength()/3)))%255)/brightnessAdjust), (int) (255/brightnessAdjust));
         }
         if(DriverStation.isTeleop()){ speed = 3;}
         else if (DriverStation.isAutonomous()){ speed = 6;}
