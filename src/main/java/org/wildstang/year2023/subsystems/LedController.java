@@ -19,7 +19,7 @@ public class LedController implements Subsystem{
     private AddressableLEDBuffer ledBuffer;
 
     private int port = 9;//port
-    private int length = 45;//length
+    private int length = 80;//length
     private int initialHue = 0;
     private boolean isRainbow = true;
     private int speed = 1;
