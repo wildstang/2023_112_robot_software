@@ -135,6 +135,8 @@ public enum WSInputs implements Inputs {
     // ********************************
 
     ARM_SWITCH ("Arm Limit Switch", new WsDigitalInputConfig(9,false)),
+    FEED_SWITCH("Feed Beam Break", new WsDigitalInputConfig(3,false)),
+    CLAW_SWITCH("Claw Limit Switch", new WsDigitalInputConfig(1,false)),
     
     // -------------------------------
     // Networked sensors
