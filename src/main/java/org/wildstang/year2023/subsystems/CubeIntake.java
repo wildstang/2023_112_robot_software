@@ -24,8 +24,8 @@ public class CubeIntake implements Subsystem {
     double speed;
     boolean deploy;
 
-    private static final double IN_SPEED = 0.7;
-    private static final double OUT_SPEED = -1.0;
+    private static final double IN_SPEED = 0.8;
+    private static final double OUT_SPEED = -0.5;
 
 
     @Override
