@@ -19,7 +19,7 @@ public class LedController implements Subsystem{
     private AddressableLEDBuffer ledBuffer;
 
     private int port = 9;//port
-    private int length = 256;//length strip:45
+    private int length = 80;//length
     private int initialHue = 0;
     private boolean auto; 
     private int[] autoColorsR = {52, 33, 11, 255};

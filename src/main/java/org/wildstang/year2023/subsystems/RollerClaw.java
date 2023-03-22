@@ -74,7 +74,7 @@ private static final double HOLD_SPEED = 0.05;
         if (source == rightTrigger){
             rollerSpeed = Math.abs(rightTrigger.getValue());
         } else if(source == leftTrigger){
-            rollerSpeed = -Math.abs(leftTrigger.getValue());
+            rollerSpeed = -0.5*Math.abs(leftTrigger.getValue());
         } else{
             rollerSpeed = HOLD_SPEED;
         }
