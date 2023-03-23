@@ -90,7 +90,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
         else if (driveState != driveType.AUTO) {
             driveState = driveType.TELEOP;
             for (int i = 0; i < modules.length; i++) {
-                modules[i].setDriveBrake(false);
+                modules[i].setDriveBrake(true);
             }
         }
         //get x and y speeds
@@ -376,7 +376,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
     public void resetState() {
         driveState = driveType.TELEOP;
         for (int i = 0; i < modules.length; i++) {
-            modules[i].setDriveBrake(false);
+            modules[i].setDriveBrake(true);
         }
         swerveHelper.setRotSpeedConst(DriveConstants.ROTATION_SPEED);
 
@@ -409,7 +409,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
     public void setToTeleop() {
         driveState = driveType.TELEOP;
         for (int i = 0; i < modules.length; i++) {
-            modules[i].setDriveBrake(false);
+            modules[i].setDriveBrake(true);
         }
         rotSpeed = 0;
         xSpeed = 0;
