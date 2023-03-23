@@ -100,12 +100,11 @@ public class CubeIntake implements Subsystem {
     public void selfTest() {
     }
 
-    public void setDeploy(boolean deploy){
+    public void setAutoDeploy(boolean deploy){
         this.deploy = deploy;
     }
 
     public void setSpeed(double speed){
         this.speed = speed;
     }
-
 }

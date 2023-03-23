@@ -10,6 +10,8 @@ import org.wildstang.framework.subsystems.swerve.SwerveDriveTemplate;
 import org.wildstang.year2023.robot.CANConstants;
 import org.wildstang.year2023.robot.WSInputs;
 import org.wildstang.year2023.robot.WSOutputs;
+import org.wildstang.year2023.robot.WSSubsystems;
+import org.wildstang.year2023.subsystems.targeting.AimHelper;
 // import org.wildstang.year2023.subsystems.targeting.AimHelper;
 import org.wildstang.hardware.roborio.outputs.WsSparkMax;
 
@@ -19,6 +21,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**Class: SwerveDrive
@@ -47,6 +51,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
     
     private SwerveDrivePoseEstimator pose;
 
+    private double xErr, yErr;
     private double xSpeed;
     private double ySpeed;
     private double rotSpeed;
@@ -59,11 +64,15 @@ public class SwerveDrive extends SwerveDriveTemplate {
     private double pathVel;
     private double pathHeading;
     private double pathTarget;
+    private double alignTargetX, alignTargetY;
+    private boolean isBlue;
 
     private final Pigeon2 gyro = new Pigeon2(CANConstants.GYRO);
     public SwerveModule[] modules;
     private SwerveSignal swerveSignal;
     private WSSwerveHelper swerveHelper = new WSSwerveHelper();
+
+    private AimHelper limelight;
 
     public enum driveType {TELEOP, AUTO, CROSS, LL};
     public driveType driveState;
@@ -94,7 +103,41 @@ public class SwerveDrive extends SwerveDriveTemplate {
         }
 
         if (source == rightBumper && rightBumper.getValue()){
-            isFieldCentric = !isFieldCentric;
+            driveState = driveType.LL;
+            rotTarget = 180.0;
+            isFieldCentric = true;
+            if(isBlue){
+                alignTargetY = PoseTargets.BLUE_ALLIANCE_CONE_NODES[0];
+                for(int i = 0; i < PoseTargets.BLUE_ALLIANCE_CONE_NODES.length; i++){
+                    if (PoseTargets.BLUE_ALLIANCE_CONE_NODES[i] < pose.getEstimatedPosition().getY()) alignTargetY = PoseTargets.BLUE_ALLIANCE_CONE_NODES[i];
+                }
+                alignTargetX = PoseTargets.BLUE_X_TARGET;
+            } else {
+                alignTargetY = PoseTargets.RED_ALLIANCE_CONE_NODES[0];
+                for(int i = 0; i < PoseTargets.RED_ALLIANCE_CONE_NODES.length; i++){
+                    if (PoseTargets.RED_ALLIANCE_CONE_NODES[i] < pose.getEstimatedPosition().getY()) alignTargetY = PoseTargets.RED_ALLIANCE_CONE_NODES[i];
+                }
+                alignTargetX = PoseTargets.RED_X_TARGET;
+            }
+        }
+
+        if (source == leftBumper && leftBumper.getValue()){
+            driveState = driveType.LL;
+            rotTarget = 180.0;
+            isFieldCentric = true;
+            if(isBlue){
+                alignTargetY = PoseTargets.BLUE_ALLIANCE_CONE_NODES[5];
+                for(int i = PoseTargets.BLUE_ALLIANCE_CONE_NODES.length-1; i <= 0; i--){
+                    if (PoseTargets.BLUE_ALLIANCE_CONE_NODES[i] > pose.getEstimatedPosition().getY()) alignTargetY = PoseTargets.BLUE_ALLIANCE_CONE_NODES[i];
+                }
+                alignTargetX = PoseTargets.BLUE_X_TARGET;
+            } else {
+                alignTargetY = PoseTargets.RED_ALLIANCE_CONE_NODES[5];
+                for(int i = PoseTargets.RED_ALLIANCE_CONE_NODES.length-1; i <= 0; i--){
+                    if (PoseTargets.RED_ALLIANCE_CONE_NODES[i] > pose.getEstimatedPosition().getY()) alignTargetY = PoseTargets.RED_ALLIANCE_CONE_NODES[i];
+                }
+                alignTargetX = PoseTargets.RED_X_TARGET;
+            }
         }
 
         //determine snake or pid locks
@@ -181,8 +224,6 @@ public class SwerveDrive extends SwerveDriveTemplate {
         rightBumper.addInputListener(this);
         leftBumper = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_LEFT_SHOULDER);
         leftBumper.addInputListener(this);
-        // rightStick = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_RIGHT_JOYSTICK_BUTTON);
-        // rightBumper.addInputListener(this);
         select = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_SELECT);
         select.addInputListener(this);
         start = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_START);
@@ -197,6 +238,8 @@ public class SwerveDrive extends SwerveDriveTemplate {
         faceDown.addInputListener(this);
         dpadLeft = (DigitalInput) Core.getInputManager().getInput(WSInputs.DRIVER_DPAD_LEFT);
         dpadLeft.addInputListener(this);
+
+        limelight = (AimHelper) Core.getSubsystemManager().getSubsystem(WSSubsystems.AIM_HELPER);
     }
 
     public void initOutputs() {
@@ -245,11 +288,9 @@ public class SwerveDrive extends SwerveDriveTemplate {
                 modules[2].getSwerveModulePosition(),
                 modules[3].getSwerveModulePosition()
             });
-
-        //TODO: add vision odometry
-        // var resultTimestamp = pipelineResult.getTimestampSeconds();
-        // pose.addVisionMeasurement(visionMeasurement.toPose2d(), resultTimestamp);
-
+        if (limelight.TargetInView){
+            pose.addVisionMeasurement(new Pose2d(limelight.botpose[0], limelight.botpose[1], new Rotation2d(-limelight.botpose[5]*Math.PI/180.0)), limelight.latency);
+        }
     }
 
     public void resetOdometry(Pose2d newPose, Rotation2d heading) {
@@ -290,7 +331,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
                 } 
             }
             this.swerveSignal = swerveHelper.setDrive(xSpeed, ySpeed, rotSpeed, getGyroAngle());
-            SmartDashboard.putNumber("FR signal", swerveSignal.getSpeed(0));
+            // SmartDashboard.putNumber("FR signal", swerveSignal.getSpeed(0));
             drive();
         }
         if (driveState == driveType.AUTO) {
@@ -302,20 +343,34 @@ public class SwerveDrive extends SwerveDriveTemplate {
             this.swerveSignal = swerveHelper.setAuto(swerveHelper.getAutoPower(pathVel), pathHeading, rotSpeed, getGyroAngle());
             drive();
         }
-        if (driveState == driveType.LL) {}
+        if (driveState == driveType.LL) {
+            for (int i = 0; i < modules.length; i++) {
+                modules[i].setDriveBrake(true);
+            }
+
+            rotSpeed = swerveHelper.getRotControl(rotTarget, getGyroAngle());
+            xErr = alignTargetX - pose.getEstimatedPosition().getX();
+            yErr = alignTargetY - pose.getEstimatedPosition().getY();
+            this.swerveSignal = swerveHelper.setDrive(-PoseTargets.POSE_P * xErr, PoseTargets.POSE_P * yErr, rotSpeed, getGyroAngle());
+            // SmartDashboard.putNumber("FR signal", swerveSignal.getSpeed(0));
+            drive();
+        }
 
         SmartDashboard.putNumber("Gyro Reading", getGyroAngle());
-        SmartDashboard.putNumber("X speed", xSpeed);
-        SmartDashboard.putNumber("Y speed", ySpeed);
+        SmartDashboard.putBoolean("isBlue", isBlue);
+        // SmartDashboard.putNumber("X speed", xSpeed);
+        // SmartDashboard.putNumber("Y speed", ySpeed);
         SmartDashboard.putNumber("rotSpeed", rotSpeed);
         SmartDashboard.putString("Drive mode", driveState.toString());
         SmartDashboard.putBoolean("rotLocked", rotLocked);
-        SmartDashboard.putNumber("Auto velocity", pathVel);
-        SmartDashboard.putNumber("Auto translate direction", pathHeading);
-        SmartDashboard.putNumber("Auto rotation target", pathTarget);
+        // SmartDashboard.putNumber("Auto velocity", pathVel);
+        // SmartDashboard.putNumber("Auto translate direction", pathHeading);
+        // SmartDashboard.putNumber("Auto rotation target", pathTarget);
         SmartDashboard.putNumber("Gyro Pitch", getGyroPitch());
         SmartDashboard.putString("swerve odometery", pose.getEstimatedPosition().toString());
         SmartDashboard.putNumber("rotTarget", rotTarget);
+        SmartDashboard.putNumber("ll align x", alignTargetX);
+        SmartDashboard.putNumber("ll align y", alignTargetY);
     }
     
     @Override
@@ -336,6 +391,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
         pathTarget = 0.0;
         isFieldCentric = true;
         isSnake = false;
+        isBlue = (DriverStation.getAlliance() == Alliance.Blue);
     }
 
     @Override
