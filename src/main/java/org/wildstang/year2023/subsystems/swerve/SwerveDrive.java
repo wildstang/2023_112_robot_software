@@ -127,13 +127,13 @@ public class SwerveDrive extends SwerveDriveTemplate {
             isFieldCentric = true;
             if(isBlue){
                 alignTargetY = PoseTargets.BLUE_ALLIANCE_CONE_NODES[5];
-                for(int i = PoseTargets.BLUE_ALLIANCE_CONE_NODES.length-1; i <= 0; i--){
+                for(int i = PoseTargets.BLUE_ALLIANCE_CONE_NODES.length-1; i >= 0; i--){
                     if (PoseTargets.BLUE_ALLIANCE_CONE_NODES[i] > pose.getEstimatedPosition().getY()) alignTargetY = PoseTargets.BLUE_ALLIANCE_CONE_NODES[i];
                 }
                 alignTargetX = PoseTargets.BLUE_X_TARGET;
             } else {
                 alignTargetY = PoseTargets.RED_ALLIANCE_CONE_NODES[5];
-                for(int i = PoseTargets.RED_ALLIANCE_CONE_NODES.length-1; i <= 0; i--){
+                for(int i = PoseTargets.RED_ALLIANCE_CONE_NODES.length-1; i >= 0; i--){
                     if (PoseTargets.RED_ALLIANCE_CONE_NODES[i] > pose.getEstimatedPosition().getY()) alignTargetY = PoseTargets.RED_ALLIANCE_CONE_NODES[i];
                 }
                 alignTargetX = PoseTargets.RED_X_TARGET;
@@ -351,8 +351,7 @@ public class SwerveDrive extends SwerveDriveTemplate {
             rotSpeed = swerveHelper.getRotControl(rotTarget, getGyroAngle());
             xErr = alignTargetX - pose.getEstimatedPosition().getX();
             yErr = alignTargetY - pose.getEstimatedPosition().getY();
-            this.swerveSignal = swerveHelper.setDrive(-PoseTargets.POSE_P * xErr, PoseTargets.POSE_P * yErr, rotSpeed, getGyroAngle());
-            // SmartDashboard.putNumber("FR signal", swerveSignal.getSpeed(0));
+            this.swerveSignal = swerveHelper.setDrive(-PoseTargets.POSE_P * yErr, PoseTargets.POSE_P * xErr, rotSpeed, getGyroAngle());
             drive();
         }
 
