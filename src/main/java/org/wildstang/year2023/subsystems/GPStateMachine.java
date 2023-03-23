@@ -3,6 +3,7 @@ package org.wildstang.year2023.subsystems;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.inputs.Input;
 import org.wildstang.framework.subsystems.Subsystem;
+import org.wildstang.hardware.roborio.inputs.WsDPadButton;
 import org.wildstang.hardware.roborio.inputs.WsDigitalInput;
 import org.wildstang.hardware.roborio.inputs.WsJoystickAxis;
 import org.wildstang.hardware.roborio.inputs.WsJoystickButton;
@@ -21,13 +22,16 @@ public class GPStateMachine implements Subsystem {
     WsJoystickAxis leftTrigger;
     WsJoystickButton intake, outtake;
     WsJoystickButton cubeButton, coneButton;
+    private WsDPadButton stow;
     WsDigitalInput feedBB; //feed beam break sensor
     SparkMaxLimitSwitch clawLimit; // claw limit switch
 
     // outputs
     WsSparkMax roller;
     WsSparkMax feed;
-    WsDoubleSolenoid cylinder;
+    WsDoubleSolenoid intakeCylinder;
+    private WsSparkMax claw;
+    private WsDoubleSolenoid gripper;
     
     // states
     int state;
@@ -37,6 +41,7 @@ public class GPStateMachine implements Subsystem {
     boolean deployOTB, deployClaw;
     boolean in, out;
     boolean feedState;
+    private int i,j;
 
     private static final double PATH_IN_SPEED = 0.8;
     private static final double PATH_OUT_SPEED = -0.8;
@@ -53,8 +58,10 @@ public class GPStateMachine implements Subsystem {
                     state = 1;
                 } else if (source == coneButton && coneButton.getValue()){
                     state = 7;
+                    i = 25;
                 } else if (source == cubeButton && cubeButton.getValue()){
                     state = 8;
+                    i = 25;
                 }
                 break;
             case 1:
@@ -102,8 +109,14 @@ public class GPStateMachine implements Subsystem {
             state = 6;
         }
 
+        if (source == stow && stow.getValue()){
+            deployClaw = false;
+            j = 25;
+            state = 0;
+            // reclamp = true;
+        }
+
         SmartDashboard.putBoolean("feed beam break", feedBB.getValue());
-        SmartDashboard.putNumber("ball path state", state);
         
     }
 
@@ -118,6 +131,8 @@ public class GPStateMachine implements Subsystem {
         coneButton.addInputListener(this);
         leftTrigger = (WsJoystickAxis) Core.getInputManager().getInput(WSInputs.MANIPULATOR_LEFT_TRIGGER);
         leftTrigger.addInputListener(this);
+        stow = (WsDPadButton) Core.getInputManager().getInput(WSInputs.MANIPULATOR_DPAD_RIGHT);
+        stow.addInputListener(this);
         
         feedBB = (WsDigitalInput) Core.getInputManager().getInput(WSInputs.FEED_SWITCH);
         feedBB.addInputListener(this);
@@ -131,7 +146,9 @@ public class GPStateMachine implements Subsystem {
 
         roller = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.INTAKE_MOTOR);
         feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
-        cylinder = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_SOLENOID);
+        intakeCylinder = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_SOLENOID);
+        claw = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.CLAW);
+        gripper = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.GRIPPER_SOLENOID);
 
         resetState();
         
@@ -199,44 +216,64 @@ public class GPStateMachine implements Subsystem {
                 break;
         }
 
-        if (roller.getTemperature() < 50) {
-            if (otbAmpLimit != 80){
-                otbAmpLimit = 80;
-                newLimit = true;
-            }
-        } else if (roller.getTemperature() < 75) {
-            if (otbAmpLimit != 60){
-                otbAmpLimit = 60;
-                newLimit = true;
-            }
-        } else if (roller.getTemperature() < 100) {
-            if (otbAmpLimit != 50){
-                otbAmpLimit = 50;
-                newLimit = true;
-            }
-        } else if (roller.getTemperature() < 120) {
-            if (otbAmpLimit != 40){
-                otbAmpLimit = 40;
-                newLimit = true;
-            }
-        } else {
-            pathSpeed = 0;
-        }
+        // if (roller.getTemperature() < 50) {
+        //     if (otbAmpLimit != 80){
+        //         otbAmpLimit = 80;
+        //         newLimit = true;
+        //     }
+        // } else if (roller.getTemperature() < 75) {
+        //     if (otbAmpLimit != 60){
+        //         otbAmpLimit = 60;
+        //         newLimit = true;
+        //     }
+        // } else if (roller.getTemperature() < 100) {
+        //     if (otbAmpLimit != 50){
+        //         otbAmpLimit = 50;
+        //         newLimit = true;
+        //     }
+        // } else if (roller.getTemperature() < 120) {
+        //     if (otbAmpLimit != 40){
+        //         otbAmpLimit = 40;
+        //         newLimit = true;
+        //     }
+        // } else {
+        //     pathSpeed = 0;
+        // }
 
-        if (newLimit) {
-            roller.setCurrentLimit(otbAmpLimit, otbAmpLimit, 0);
-            newLimit = false;
-        }
+        // if (newLimit) {
+        //     roller.setCurrentLimit(otbAmpLimit, otbAmpLimit, 0);
+        //     newLimit = false;
+        // }
 
         roller.setValue(pathSpeed);
         feed.setValue(-pathSpeed);
 
         if (deployOTB){
-            cylinder.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+            intakeCylinder.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
         } else {
-            cylinder.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+            intakeCylinder.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
         }
+
+        if (i <= 0){ // delay to allow tap to open or close cylinder
+            claw.setValue(clawSpeed);
+        } else {
+            claw.setValue(0);
+            i --;
+        }
+
         
+        if (j <= 0){  // delay closing gripper when going to stow
+            if (deployClaw){
+                gripper.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+            } else{
+                gripper.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+            }
+        } else {
+            j --;
+        }
+
+        SmartDashboard.putBoolean("claw limit", clawLimit.isPressed());
+        SmartDashboard.putNumber("ball path state", state);
     }
 
     @Override
@@ -255,8 +292,7 @@ public class GPStateMachine implements Subsystem {
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return "Game Piece State Machine";
     }
     
 }

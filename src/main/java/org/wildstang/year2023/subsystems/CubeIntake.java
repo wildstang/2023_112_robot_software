@@ -38,8 +38,8 @@ public class CubeIntake implements Subsystem {
     boolean in, out;
     boolean feedState;
 
-    private static final double IN_SPEED = 0.8;
-    private static final double OUT_SPEED = -0.5;
+    private static final double PATH_IN_SPEED = 0.8;
+    private static final double PATH_OUT_SPEED = -0.5;
 
 
     @Override
@@ -121,34 +121,34 @@ public class CubeIntake implements Subsystem {
                 break;
         }
 
-        if (roller.getTemperature() < 50) {
-            if (otbAmpLimit != 80){
-                otbAmpLimit = 80;
-                newLimit = true;
-            }
-        } else if (roller.getTemperature() < 75) {
-            if (otbAmpLimit != 60){
-                otbAmpLimit = 60;
-                newLimit = true;
-            }
-        } else if (roller.getTemperature() < 100) {
-            if (otbAmpLimit != 50){
-                otbAmpLimit = 50;
-                newLimit = true;
-            }
-        } else if (roller.getTemperature() < 120) {
-            if (otbAmpLimit != 40){
-                otbAmpLimit = 40;
-                newLimit = true;
-            }
-        } else {
-            pathSpeed = 0;
-        }
+        // if (roller.getTemperature() < 50) {
+        //     if (otbAmpLimit != 80){
+        //         otbAmpLimit = 80;
+        //         newLimit = true;
+        //     }
+        // } else if (roller.getTemperature() < 75) {
+        //     if (otbAmpLimit != 60){
+        //         otbAmpLimit = 60;
+        //         newLimit = true;
+        //     }
+        // } else if (roller.getTemperature() < 100) {
+        //     if (otbAmpLimit != 50){
+        //         otbAmpLimit = 50;
+        //         newLimit = true;
+        //     }
+        // } else if (roller.getTemperature() < 120) {
+        //     if (otbAmpLimit != 40){
+        //         otbAmpLimit = 40;
+        //         newLimit = true;
+        //     }
+        // } else {
+        //     pathSpeed = 0;
+        // }
 
-        if (newLimit) {
-            roller.setCurrentLimit(otbAmpLimit, otbAmpLimit, 0);
-            newLimit = false;
-        }
+        // if (newLimit) {
+        //     roller.setCurrentLimit(otbAmpLimit, otbAmpLimit, 0);
+        //     newLimit = false;
+        // }
 
         roller.setValue(pathSpeed);
         feed.setValue(-pathSpeed);
