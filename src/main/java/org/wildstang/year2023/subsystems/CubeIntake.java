@@ -38,8 +38,8 @@ public class CubeIntake implements Subsystem {
     boolean in, out;
     boolean feedState;
 
-    private static final double PATH_IN_SPEED = 0.8;
-    private static final double PATH_OUT_SPEED = -0.8;
+    private static final double IN_SPEED = 0.8;
+    private static final double OUT_SPEED = -0.5;
 
 
     @Override
