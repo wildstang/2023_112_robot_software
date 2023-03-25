@@ -21,11 +21,18 @@ public class LedController implements Subsystem{
     private int port = 9;//port
     private int length = 80;//length
     private int initialHue = 0;
+    private boolean auto; 
+    private int[] autoColorsR = {52, 33, 11, 255};
+    private int[] autoColorsG = {161, 79, 2, 255};
+    private int[] autoColorsB = {236, 194, 97, 255};
+    private int timer = 0;
+    private int color = 0;
     private boolean isRainbow = true;
     private int speed = 1;
 
     @Override
     public void inputUpdate(Input source) {
+        auto = false;  // If there is any teleop input, stop running the auto light show
         if (source == coneButton) {
             coneDisplay();
             isRainbow = false;
@@ -63,14 +70,22 @@ public class LedController implements Subsystem{
 
     @Override
     public void update() {
-        if (isRainbow){
+        if (!(Core.getAutoManager().isLockedIn())){
+            for (var i = 0; i < length; i++) {
+                ledBuffer.setRGB(i, 255, 0, 0);
+            }
+            led.setData(ledBuffer);
+        } else if (isRainbow){
             rainbow();
+        } else if (auto){
+            showTime();
         }
     }
 
     @Override
     public void resetState() {
         isRainbow = true;
+        auto = false;
     }
 
     @Override
@@ -92,9 +107,28 @@ public class LedController implements Subsystem{
         led.setData(ledBuffer);
     }
 
+    public void showTime(){
+
+        if (timer >= 13){
+            for (int i = 0; i < length; i++){
+                ledBuffer.setRGB(i, autoColorsR[color], autoColorsG[color], autoColorsB[color]);
+            }
+            led.setData(ledBuffer);
+            timer = 0;
+            color = (color + 1) % autoColorsR.length;
+        }
+        timer++;
+    }
+
+    public void setAuto(boolean on){
+        auto = on;
+        isRainbow = false;
+    }
+
     private void rainbow(){
+        double brightnessAdjust = 8;
         for (int i = 0; i < ledBuffer.getLength(); i++){
-            ledBuffer.setRGB(i, (initialHue + (i*255/(ledBuffer.getLength()/3)))%255, (initialHue + (i*255/(ledBuffer.getLength()/3)))%255, 255);
+            ledBuffer.setRGB(i, (int) (((initialHue + (i*255/(ledBuffer.getLength()/3)))%255)/brightnessAdjust), (int) (((initialHue + (i*255/(ledBuffer.getLength()/3)))%255)/brightnessAdjust), (int) (255/brightnessAdjust));
         }
         if(DriverStation.isTeleop()){ speed = 3;}
         else if (DriverStation.isAutonomous()){ speed = 6;}

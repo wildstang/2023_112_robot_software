@@ -10,6 +10,7 @@ import org.wildstang.framework.auto.steps.SetGyroStep;
 import org.wildstang.framework.auto.steps.SwervePathFollowerStep;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.core.Core;
+import org.wildstang.year2023.auto.steps.AutoLightShow;
 import org.wildstang.year2023.auto.steps.ClawRelease;
 import org.wildstang.year2023.auto.steps.IntakeCube;
 import org.wildstang.year2023.auto.steps.MoveArm;
@@ -66,7 +67,7 @@ public class Top_2pe extends AutoProgram{
         //stow intake and drive to cube node
         AutoParallelStepGroup group2 = new AutoParallelStepGroup();
         group2.addStep(new PathHeadingStep(180, swerve));
-        group2.addStep(new WaitForHeading(189, swerve));
+        group2.addStep(new WaitForHeading(180, swerve));
         group2.addStep(new ClawRelease(true));
         group2.addStep(new IntakeCube(false)); // stow intake
         addStep(group2);
@@ -90,6 +91,7 @@ public class Top_2pe extends AutoProgram{
         group4.addStep(new ClawRelease(true));
         addStep(group4);
 
+        addStep(new AutoLightShow(true));
     }
 
     @Override
