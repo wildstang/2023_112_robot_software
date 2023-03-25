@@ -24,7 +24,7 @@ public class CubeIntake implements Subsystem {
     double speed;
     boolean deploy;
 
-    private static final double IN_SPEED = 0.8;
+    private static final double IN_SPEED = 0.7;
     private static final double OUT_SPEED = -0.5;
 
 
@@ -36,6 +36,7 @@ public class CubeIntake implements Subsystem {
         outtake.addInputListener(this);
 
         roller = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.INTAKE_MOTOR);
+        roller.setCurrentLimit(50, 50, 0);
         feed = (WsSparkMax) Core.getOutputManager().getOutput(WSOutputs.FEED);
         cylinder = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.INTAKE_SOLENOID);
 

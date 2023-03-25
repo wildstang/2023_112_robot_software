@@ -158,6 +158,6 @@ public class SwerveModule {
 
     public SwerveModulePosition getSwerveModulePosition(){
         // TODO: replace getAngle with odometry angle?
-        return new SwerveModulePosition(getPosition()*.0254,new Rotation2d(getAngle()*Math.PI/180.0));
+        return new SwerveModulePosition(getPosition()*.0254,new Rotation2d(-getAngle()*Math.PI/180.0));
     }
 }
