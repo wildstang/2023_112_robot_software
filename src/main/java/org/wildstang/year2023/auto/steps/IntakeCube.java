@@ -27,7 +27,7 @@ public class IntakeCube extends AutoStep {
     public void update() {
         if(on){
             claw.setGripper(true);
-            claw.setSpeed(.8);
+            claw.setSpeed(.5);
             intake.setAutoDeploy(true);
             intake.setSpeed(1.0);
         } else {

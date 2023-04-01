@@ -9,9 +9,16 @@ public class ClawRelease extends AutoStep {
 
     private RollerClaw claw;
     boolean release;
+    double speed;
 
     public ClawRelease (boolean release){
         this.release = release;
+        this.speed = 0;
+    }
+
+    public ClawRelease (boolean release, double speed) {
+        this.release = release;
+        this.speed = speed;
     }
 
     @Override
@@ -27,6 +34,7 @@ public class ClawRelease extends AutoStep {
         } else {
             claw.setGripper(true);
         }
+        claw.setSpeed(speed);
         this.setFinished(true);
         
     }

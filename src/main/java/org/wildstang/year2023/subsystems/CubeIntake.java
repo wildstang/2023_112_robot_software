@@ -23,9 +23,10 @@ public class CubeIntake implements Subsystem {
     // states
     double speed;
     boolean deploy;
+    int i;
 
     private static final double IN_SPEED = 0.7;
-    private static final double OUT_SPEED = -0.5;
+    private static final double OUT_SPEED = -0.3;
 
 
     @Override
@@ -47,11 +48,16 @@ public class CubeIntake implements Subsystem {
     public void resetState() {
         speed = 0;
         deploy = false;
+        i = 0;
     }
 
     @Override
     public void update() {
-        roller.setValue(speed);
+        if (i <= 0){
+            roller.setValue(speed);
+        } else {
+            i --;
+        }
         feed.setValue(-speed);
         if (deploy){
             cylinder.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
@@ -66,17 +72,21 @@ public class CubeIntake implements Subsystem {
             if (intake.getValue()){
                 deploy = true;
                 speed = IN_SPEED;
+                i = 0;
             } else {
                 deploy = false;
                 speed = 0;
+                i = 0;
             }
         } else if (source == outtake){
             if (outtake.getValue()){
                 deploy = true;
                 speed = OUT_SPEED;
+                i = 0;
             } else {
                 deploy = false;
                 speed = 0;
+                i = 50;
             }
         }
     }    

@@ -15,6 +15,7 @@ public class AutoBalance extends AutoStep {
     // private boolean isBlue;
     private static final double kP = 0.8;
     private static final double kD = 0.0;
+    private int i;
     private double error, prevErr;
     private double heading;
     private double dOut;
@@ -29,6 +30,7 @@ public class AutoBalance extends AutoStep {
     public void initialize() {
         swerve = (SwerveDrive) Core.getSubsystemManager().getSubsystem(WSSubsystems.SWERVE_DRIVE);
         swerve.setToAuto();
+        i = 0;
         
     }
 
@@ -45,8 +47,16 @@ public class AutoBalance extends AutoStep {
         
         SmartDashboard.putNumber("gyro balance output", error);
         SmartDashboard.putNumber("gyro d term", dOut);
+
+        if (Math.abs(error) < 3) {
+            i ++;
+        } else {
+            i = 0;
+        }
+
+        SmartDashboard.putNumber("balance delay", i);
         
-        if (Math.abs(error) < 3|| DriverStation.getMatchTime() <= 0.1) { // 
+        if (DriverStation.getMatchTime() <= 0.1) { // 
             swerve.setToCross();
             setFinished();
         } else {

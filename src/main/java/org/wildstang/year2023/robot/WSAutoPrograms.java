@@ -7,6 +7,7 @@ import org.wildstang.year2023.auto.programs.Cable_1p1e;
 import org.wildstang.year2023.auto.programs.Cable_2;
 import org.wildstang.year2023.auto.programs.Cable_2pe;
 import org.wildstang.year2023.auto.programs.Center_1pe;
+import org.wildstang.year2023.auto.programs.Center_1pme;
 import org.wildstang.year2023.auto.programs.Top_1p1;
 import org.wildstang.year2023.auto.programs.Top_1p1e;
 import org.wildstang.year2023.auto.programs.Top_2;
@@ -25,11 +26,12 @@ public enum WSAutoPrograms implements AutoPrograms {
     CABLE_2("Cable_2", Cable_2.class),
     CABLE_2PE("Cable_2pe", Cable_2pe.class),
     CENTER_1PE("Center_1pe",Center_1pe.class),
+    CENTER_1PME("Center_1pme",Center_1pme.class),
     TOP_1P1("Top_1p1",Top_1p1.class),
     TOP_1P1E("Top_1p1e",Top_1p1e.class),
     TOP_2("Top_2",Top_2.class),
     TOP_2PE("Top_2pe",Top_2pe.class),
-    AUTOBALANCEPROGRAM("AutoBalanceProgram", AutoBalanceProgram.class)
+    AUTOBALANCEPROGRAM("AutoBalanceProgram", AutoBalanceProgram.class),
     ;
 
     /**

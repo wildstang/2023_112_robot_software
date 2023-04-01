@@ -36,14 +36,13 @@ public class Cable_2 extends AutoProgram{
     protected void defineSteps() {
         SwerveDrive swerve = (SwerveDrive) Core.getSubsystemManager().getSubsystem(WSSubsystems.SWERVE_DRIVE);
 
-        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Cable_2", new PathConstraints(3.0, 3.0));
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Cable_2", new PathConstraints(3.5, 3.0));
 
         color = (DriverStation.getAlliance() == Alliance.Blue);
         
         //score preload
         addStep(new SetGyroStep(180, swerve));
         addStep(new InitializeOdometry(new Translation2d(14.8,0.47), Math.PI));
-        addStep(new AutoStepDelay(5000));
         addStep(new MoveArm("MID"));
         addStep(new ClawRelease(false));
         addStep(new AutoStepDelay(500));
@@ -56,7 +55,6 @@ public class Cable_2 extends AutoProgram{
         group0.addStep(new MoveArm("STOW"));
         group0.addStep(new ClawRelease(true));
         addStep(group0);
-        addStep(new AutoStepDelay(5000));
 
         AutoParallelStepGroup group1 = new AutoParallelStepGroup();
         group1.addStep(new SwervePathFollowerStep(pathGroup.get(0), swerve, color));
@@ -67,34 +65,39 @@ public class Cable_2 extends AutoProgram{
         addStep(group1);
 
         addStep(new AutoStepDelay(800));
-        addStep(new AutoStepDelay(5000));
         
         //stow intake and drive to cube node
         AutoParallelStepGroup group2 = new AutoParallelStepGroup();
         group2.addStep(new PathHeadingStep(180, swerve));
         group2.addStep(new WaitForHeading(180, swerve));
-        group2.addStep(new ClawRelease(true));
-        group2.addStep(new IntakeCube(false)); // stow intake
         addStep(group2);
 
         AutoParallelStepGroup group3 = new AutoParallelStepGroup();
         group3.addStep(new SwervePathFollowerStep(pathGroup.get(1), swerve, color));
-        AutoSerialStepGroup subgroup3_1 = new AutoSerialStepGroup();
-        subgroup3_1.addStep(new AutoStepDelay(1500));
-        subgroup3_1.addStep(new MoveArm("MID"));
-        group3.addStep(subgroup3_1);
+        // AutoSerialStepGroup subgroup3_1 = new AutoSerialStepGroup();
+        // subgroup3_1.addStep(new AutoStepDelay(1500));
+        // group3.addStep(subgroup3_1);
+        AutoSerialStepGroup subgroup3_2 = new AutoSerialStepGroup();
+        //subgroup3_2.addStep(new AutoStepDelay(250));
+        subgroup3_2.addStep(new IntakeCube(false)); // stow intake
+        // NOTE: moved this down 1
+        subgroup3_2.addStep(new AutoStepDelay(750));
+        subgroup3_2.addStep(new ClawRelease(true));
+        subgroup3_2.addStep(new AutoStepDelay(750));
+        subgroup3_2.addStep(new MoveArm("MID"));
         addStep(group3);
-
+ 
         // score cube
-        addStep(new ClawRelease(false));
+        addStep(new ClawRelease(false, -0.3));
         addStep(new AutoStepDelay(500));
 
         //move arm to stow
         AutoParallelStepGroup group4 = new AutoParallelStepGroup();
         group4.addStep(new MoveArm("STOW"));
         AutoSerialStepGroup subgroup4_1 = new AutoSerialStepGroup();
-        subgroup4_1.addStep(new AutoStepDelay(800));
-        subgroup4_1.addStep(new ClawRelease(true));
+        subgroup4_1.addStep(new AutoStepDelay(1200));
+        subgroup4_1.addStep(new ClawRelease(true, 0));
+        // subgroup1_1.addStep(new PathHeadingStep(0, swerve));
         addStep(group4);
 
         addStep(new AutoLightShow(true));

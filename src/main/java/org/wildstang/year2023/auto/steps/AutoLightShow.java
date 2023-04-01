@@ -28,7 +28,7 @@ public class AutoLightShow extends AutoStep{
 
     @Override
     public void update() {
-        if (DriverStation.getMatchTime() <= 0){
+        if (DriverStation.getMatchTime() <= 0.2){
             board.setAuto(false);
             setFinished();
         } 
