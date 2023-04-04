@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         Log.danger("Engaging teleoperated mode.");
+        Core.getAutoManager().resetState();
         Core.getSubsystemManager().resetState();
     }
 

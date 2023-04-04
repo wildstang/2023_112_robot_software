@@ -142,4 +142,13 @@ public class AutoManager {
     public boolean isLockedIn(){
         return lockinChooser.getSelected();
     }
+
+    /**
+     * Resets states of all programs registered with the manager.
+     */
+    public void resetState() {
+        for (AutoProgram program : programs) {
+            program.cleanup();
+        }
+    }
 }

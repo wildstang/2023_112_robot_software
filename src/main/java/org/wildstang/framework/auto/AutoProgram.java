@@ -43,6 +43,7 @@ public abstract class AutoProgram {
      * Remove all steps from the AutoProgram
      */
     public void cleanup() {
+        finished = true;
         programSteps.clear();
     }
 
