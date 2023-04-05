@@ -48,10 +48,21 @@ public class AutoManager {
             programFinished = false;
             startSleeper();
         }
+        else if (lockinChooser.getSelected())
+        {
+            lockCurrentProgram();
+        }
         runningProgram.update();
         if (runningProgram.isFinished()) {
             programFinished = true;
         }
+    }
+
+    /**
+     * Creates the currently selected program from SmartDashboard if locked in.
+     */
+    public void lockCurrentProgram() {
+        lockProgram(chooser.getSelected());
     }
 
     /**
@@ -70,6 +81,20 @@ public class AutoManager {
      */
     public void startSleeper() {
         startProgram(programs.get(0));
+    }
+
+    /**
+     * Creates a given AutoProgram and announces it at Info level and on dashboard.
+     * @param program New program to create.
+     */
+    private void lockProgram(AutoProgram program) {
+        if (program != runningProgram)
+        {
+            runningProgram = program;
+            program.defineSteps();
+            Log.info("Creating auto program: " + program.toString());
+            SmartDashboard.putString("Creating Autonomous Program", program.toString());
+        }
     }
 
     /**

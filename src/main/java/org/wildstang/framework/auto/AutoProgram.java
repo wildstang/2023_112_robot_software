@@ -31,7 +31,10 @@ public abstract class AutoProgram {
      * Collects the defined steps and starts the auto program.
      */
     public void initialize() {
-        defineSteps();
+        if (programSteps.size() == 0)
+        {
+            defineSteps();
+        }
         loadStopPosition();
         currentStep = 0;
         finishedPreviousStep = false;
