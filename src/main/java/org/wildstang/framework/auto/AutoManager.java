@@ -69,6 +69,11 @@ public class AutoManager {
      * Starts the currently selected program from SmartDashboard if locked in.
      */
     public void startCurrentProgram() {
+        if (programFinished)
+        {
+            init();
+        }
+
         if (lockinChooser.getSelected()) {
             startProgram(chooser.getSelected());
         } else {
@@ -88,7 +93,7 @@ public class AutoManager {
      * @param program New program to create.
      */
     private void lockProgram(AutoProgram program) {
-        if (program != runningProgram)
+        if (!programFinished && program != runningProgram)
         {
             runningProgram = program;
             program.defineSteps();
@@ -172,6 +177,7 @@ public class AutoManager {
      * Resets states of all programs registered with the manager.
      */
     public void resetState() {
+        programFinished = true;
         for (AutoProgram program : programs) {
             program.cleanup();
         }
